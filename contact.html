@@ -1,1 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | CryptoMetricPro</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- INCLUDE NAVBAR HERE -->
 
+    <main class="container">
+        <div class="calc-wrapper card" style="margin-top: 4rem;">
+            <h2>Contact Support</h2>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">Have a question about our calculators or need to report a bug? Reach out below.</p>
+
+            <!-- HTML5 Basic Validation -->
+            <form action="#" method="POST" id="contact-form">
+                <div class="input-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" placeholder="John Doe" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="john@example.com" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" rows="5" placeholder="How can we help?" required style="width: 100%; padding: 0.75rem; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 0.5rem; font-family: var(--font-base); outline: none; resize: vertical;"></textarea>
+                </div>
+
+                <button type="submit" class="btn" style="width: 100%;">Send Message</button>
+            </form>
+        </div>
+    </main>
+
+    <!-- INCLUDE FOOTER HERE -->
+    <script src="js/main.js"></script>
+    <script>
+        // Simple client-side form behavior
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for reaching out! Your message has been sent. (This is a frontend demo)');
+            this.reset();
+        });
+    </script>
+</body>
+</html>

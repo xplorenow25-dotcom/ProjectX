@@ -113,3 +113,41 @@ a:hover { color: var(--accent); }
 .site-footer { background: var(--card-bg); padding: 2rem 0; border-top: 1px solid var(--card-border); margin-top: auto; }
 
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+/* ======== NEW EDUCATION SECTION CSS ======== */
+.edu-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+    gap: 1.2rem; 
+}
+.edu-card { 
+    background: var(--card-bg); 
+    border: 1px solid var(--card-border); 
+    padding: 1.5rem; 
+    border-radius: 1rem; 
+    transition: transform 0.2s, border-color 0.2s; 
+    display: block; 
+}
+.edu-card:hover { 
+    border-color: var(--accent); 
+    transform: translateY(-4px); 
+}
+.edu-tag { 
+    font-size: 0.75rem; 
+    color: var(--accent); 
+    font-weight: 800; 
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+    margin-bottom: 0.5rem; 
+    display: block; 
+}
+.edu-card h3 { 
+    color: #fff; 
+    font-size: 1.15rem; 
+    margin-bottom: 0.5rem; 
+    line-height: 1.3; 
+}
+.edu-card p { 
+    color: var(--text-muted); 
+    font-size: 0.85rem; 
+    line-height: 1.5; 
+}

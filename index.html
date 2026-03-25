@@ -3,122 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CryptoMetricPro | Advanced Crypto Calculators</title>
-    <meta name="description" content="Calculate your crypto profits, futures leverage, and trading fees easily. Stop guessing and start planning your trades.">
+    <title>CryptoMetricPro | Calculator Hub</title>
+    <meta name="description" content="Calculate your crypto profits, futures leverage, and trading fees easily.">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
-    <!-- NAVBAR (Use this on all pages, adjust paths like ../ if in subfolders) -->
-    <nav class="navbar">
-        <div class="container nav-container">
-            <a href="index.html" class="logo">CryptoMetric<span>Pro</span></a>
+    <!-- MODERN APP NAVBAR -->
+    <nav class="navbar modern-nav">
+        <div class="container nav-container" style="display: flex; justify-content: space-between; align-items: center;">
+            <a href="index.html" class="logo-wrapper">
+                <div class="logo-box">CMP</div>
+                <div class="logo-text">CryptoMetricPro</div>
+            </a>
+            <button class="mobile-menu-btn" style="color: white; background: none; border: none; font-size: 1.5rem;">☰</button>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- HERO SECTION -->
+        <section class="hero text-center" style="padding: 3rem 0 1rem;">
+            <h1 style="font-size: 2.2rem; margin-bottom: 1rem;">Crypto Profit Calculator</h1>
+            <p style="color: var(--text-muted); font-size: 1rem; max-width: 400px; margin: 0 auto;">Calculate your potential profits, fees, and liquidations instantly.</p>
+        </section>
+
+        <!-- CAPSULE NAVIGATION -->
+        <div class="capsule-nav">
+            <button class="tab-btn active" onclick="switchTab('spot')">Spot</button>
+            <button class="tab-btn" onclick="switchTab('futures')">Futures</button>
+            <button class="tab-btn" onclick="switchTab('fees')">Fee</button>
+            <button class="tab-btn" onclick="window.location.href='blog/index.html'">Blog</button>
+        </div>
+
+        <div class="app-layout">
             
-            <button class="mobile-menu-btn">☰</button>
-            
-            <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li class="nav-item">
-                    <a href="#">Tools ▾</a>
-                    <ul class="dropdown-menu">
-                        <li><a href="tools/spot.html">Spot Calculator</a></li>
-                        <li><a href="tools/futures.html">Futures Calculator</a></li>
-                        <li><a href="tools/fees.html">Fees Calculator</a></li>
-                    </ul>
-                </li>
-                <li><a href="learn/index.html">Learn</a></li>
-                <li><a href="blog/index.html">Blog</a></li>
-                <li><a href="affiliate.html">Exchanges</a></li>
-                
-                <li>
-                    <select id="currency-selector" class="currency-select">
+            <!-- CALCULATOR HEADER -->
+            <div class="calc-header">
+                <h2 id="calc-title">Spot Calculator</h2>
+                <div class="currency-dropdown-wrapper">
+                    <select id="currency-selector" class="currency-select-modern">
                         <option value="USD">USD ($)</option>
                         <option value="EUR">EUR (€)</option>
                         <option value="GBP">GBP (£)</option>
                     </select>
-                </li>
-            </ul>
+                </div>
+            </div>
+
+            <!-- SPOT CALCULATOR TAB -->
+            <div id="tab-spot" class="calc-card-modern tab-content active">
+                <div class="input-block">
+                    <label>Investment Amount</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="spot-inv" placeholder="1000">
+                        <span class="currency-label">USD</span>
+                    </div>
+                </div>
+                <div class="input-block">
+                    <label>Buy Price</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="spot-buy" placeholder="45000">
+                        <span class="currency-label">USD</span>
+                    </div>
+                </div>
+                <div class="input-block">
+                    <label>Sell Price</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="spot-sell" placeholder="50000">
+                        <span class="currency-label">USD</span>
+                    </div>
+                </div>
+                <div class="input-block">
+                    <label>Exchange Fee</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="spot-fee" placeholder="0.1" value="0.1">
+                        <span style="color: #9CA3AF;">%</span>
+                    </div>
+                </div>
+
+                <div class="result-block-modern">
+                    <p class="result-label">Profit / Loss</p>
+                    <h3 class="result-main"><span class="currency-symbol">$</span><span id="spot-profit">0.00</span></h3>
+                    <p class="result-sub"><span id="spot-roi">0.00</span>%</p>
+                </div>
+            </div>
+
+            <!-- FUTURES CALCULATOR TAB (Hidden by default) -->
+            <div id="tab-futures" class="calc-card-modern tab-content">
+                <div class="input-block">
+                    <label>Initial Margin</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="fut-margin" placeholder="500">
+                        <span class="currency-label">USD</span>
+                    </div>
+                </div>
+                <div class="input-block">
+                    <label>Leverage (x)</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="fut-lev" placeholder="10" value="10">
+                        <span style="color: #9CA3AF;">x</span>
+                    </div>
+                </div>
+                <div class="input-block">
+                    <label>Entry Price</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="fut-entry" placeholder="60000">
+                        <span class="currency-label">USD</span>
+                    </div>
+                </div>
+                <div class="input-block">
+                    <label>Exit Price</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="fut-exit" placeholder="62000">
+                        <span class="currency-label">USD</span>
+                    </div>
+                </div>
+
+                <div class="result-block-modern">
+                    <p class="result-label">PnL (Return on Equity)</p>
+                    <h3 class="result-main"><span class="currency-symbol">$</span><span id="fut-profit">0.00</span></h3>
+                    <p class="result-sub"><span id="fut-roi">0.00</span>%</p>
+                </div>
+            </div>
+
+            <!-- FEES CALCULATOR TAB (Hidden by default) -->
+            <div id="tab-fees" class="calc-card-modern tab-content">
+                <div class="input-block">
+                    <label>Total Trade Size</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="fee-size" placeholder="10000">
+                        <span class="currency-label">USD</span>
+                    </div>
+                </div>
+                <div class="input-block">
+                    <label>Maker/Taker Fee</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="fee-pct" placeholder="0.1" value="0.1">
+                        <span style="color: #9CA3AF;">%</span>
+                    </div>
+                </div>
+
+                <div class="result-block-modern">
+                    <p class="result-label">Total Fee Paid</p>
+                    <h3 class="result-main loss">-<span class="currency-symbol">$</span><span id="fee-total">0.00</span></h3>
+                </div>
+            </div>
+
         </div>
-    </nav>
 
-    <!-- HERO SECTION -->
-    <main class="container">
-        <section class="hero">
-            <h1>Calculate Before You Trade</h1>
-            <p>Advanced metrics and position planning for crypto spot and futures markets. Maximize your profits and understand your risks.</p>
-            <a href="tools/spot.html" class="btn">Launch Calculators</a>
+        <!-- AFFILIATE SECTION (Always visible below calculators) -->
+        <section class="affiliate-section" style="margin-top: 4rem; padding-bottom: 4rem;">
+            <h2 class="text-center" style="margin-bottom: 0.5rem;">Recommended Trading Platforms</h2>
+            <p class="text-center" style="color: var(--text-muted); margin-bottom: 2rem;">Open an account using our links below to claim exclusive sign-up bonuses.</p>
+
+            <div class="affiliate-card">
+                <h3><img src="https://cryptologos.cc/logos/bnb-bnb-logo.png" width="24" alt="Binance"> Binance</h3>
+                <p>Biggest Exchange and Trading volume</p>
+                <div class="bonus-text">Up to $100 Bonus + 10% Fee Discount</div>
+                <a href="#" class="btn-outline-green">Claim Bonus</a>
+            </div>
+
+            <div class="affiliate-card">
+                <h3><img src="https://cryptologos.cc/logos/tether-usdt-logo.png" width="24" alt="Bybit"> Bybit</h3>
+                <p>Best platform for Derivatives & Futures</p>
+                <div class="bonus-text">Up to $5,000 Deposit Reward</div>
+                <a href="#" class="btn-outline-green">Claim Bonus</a>
+            </div>
+
+            <div class="affiliate-card">
+                <h3><img src="https://cryptologos.cc/logos/kraken-k-logo.png" width="24" alt="Kraken"> Kraken</h3>
+                <p>Best for security and Never Hacked</p>
+                <div class="bonus-text">20% Maker Fee Discount</div>
+                <a href="#" class="btn-outline-green">Claim Bonus</a>
+            </div>
         </section>
 
-        <!-- FEATURES -->
-        <section class="grid-3">
-            <div class="card">
-                <h3>Spot Calculator</h3>
-                <p>Calculate exact profit and loss for your standard spot market trades without needing complex spreadsheets.</p>
-                <a href="tools/spot.html" class="btn">Calculate Spot</a>
-            </div>
-            <div class="card">
-                <h3>Futures & Leverage</h3>
-                <p>Determine margin requirements, leverage limits, and potential ROI for long and short futures positions.</p>
-                <a href="tools/futures.html" class="btn">Calculate Futures</a>
-            </div>
-            <div class="card">
-                <h3>Fee Analyzer</h3>
-                <p>Don't let hidden exchange fees eat your profits. Find out exactly how much a trade costs to open and close.</p>
-                <a href="tools/fees.html" class="btn">Calculate Fees</a>
-            </div>
-        </section>
     </main>
-
-    <!-- FOOTER (Use this on all pages) -->
-    <footer>
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-col">
-                    <h4>CryptoMetricPro</h4>
-                    <p style="color: var(--text-muted); font-size: 0.9rem;">Empowering traders with precision metrics.</p>
-                </div>
-                <div class="footer-col">
-                    <h4>Tools</h4>
-                    <ul>
-                        <li><a href="tools/spot.html">Spot Calculator</a></li>
-                        <li><a href="tools/futures.html">Futures Calculator</a></li>
-                        <li><a href="tools/fees.html">Fees Calculator</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Resources</h4>
-                    <ul>
-                        <li><a href="learn/index.html">Learn Hub</a></li>
-                        <li><a href="blog/index.html">Blog</a></li>
-                        <li><a href="affiliate.html">Best Exchanges</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4>Company</h4>
-                    <ul>
-                        <li><a href="about.html">About Us</a></li>
-                        <li><a href="contact.html">Contact</a></li>
-                        <li><a href="privacy.html">Privacy Policy</a></li>
-                        <li><a href="terms.html">Terms & Conditions</a></li>
-                        <li><a href="disclaimer.html">Disclaimer</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 CryptoMetricPro. All rights reserved. For educational purposes only.</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- COOKIE BANNER -->
-    <div id="cookie-banner" class="cookie-banner hidden">
-        <p>We use cookies to ensure you get the best experience on our website. Selected preferences are saved locally.</p>
-        <div class="cookie-btns">
-            <button id="accept-cookies" class="btn">Accept</button>
-            <button id="reject-cookies" class="btn btn-outline">Reject</button>
-        </div>
-    </div>
 
     <script src="js/main.js"></script>
 </body>
-</html>
+</html

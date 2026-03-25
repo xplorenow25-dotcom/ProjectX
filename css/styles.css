@@ -154,3 +154,6 @@ a:hover { color: var(--accent); }
 /* ======== CONTACT FORM TEXTAREA ======== */
 .modern-textarea { width: 100%; background: transparent; border: none; color: #fff; font-size: 1rem; outline: none; resize: vertical; min-height: 120px; font-family: var(--font-base); }
 .modern-textarea::placeholder { color: #9CA3AF; }
+/* ======== CUSTOM LOGO SIZING ======== */
+.brand-logo { display: flex; align-items: center; text-decoration: none; }
+.custom-logo { max-height: 45px; width: auto; object-fit: contain; }

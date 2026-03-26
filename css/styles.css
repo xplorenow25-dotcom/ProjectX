@@ -321,33 +321,25 @@ a:hover { color: var(--accent); }
     background: rgba(255, 255, 255, 0.05);
 }
 
-/* The container holding the animation must hide the edges */
-.live-prices {
-  margin: 20px 0 10px;
-  overflow: hidden; /* Hides the coins when they go off-screen */
-  width: 100%;
-}
-
-.live-prices h2 {
-  font-size: 14px;
-  margin-bottom: 8px;
-  color: #94a3b8;
-  padding: 0 15px; /* Keeps the title indented */
-}
-
-/* The actual moving track */
+/* ======== AUTO-SCROLLING LIVE PRICES ======== */
 .price-row {
   display: flex;
-  gap: 10px;
-  width: max-content; /* THE FIX: Lets the box be as wide as all 5 coins! */
-  padding-left: 100%; /* Starts the coins off-screen to the right */
+  gap: 8px;
+  overflow: hidden; /* Hides the ugly scrollbar */
+  white-space: nowrap;
+  
+  /* This is the magic line that makes it move automatically */
   animation: tickerScroll 20s linear infinite; 
 }
 
-/* Your beautiful cards */
+/* This controls the movement from Right to Left */
+@keyframes tickerScroll {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-150%); }
+}
+
 .price-card {
   min-width: 90px;
-  flex-shrink: 0; /* THE FIX: Prevents the cards from getting squished */
   background: rgba(30, 41, 59, 0.6);
   padding: 8px;
   border-radius: 8px;
@@ -357,12 +349,6 @@ a:hover { color: var(--accent); }
 
 .price {
   font-size: 13px;
-}
-
-/* The Animation */
-@keyframes tickerScroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-100%); }
 }
 /* ======== FAR-LEFT LOGO & GREEN PRO TEXT ======== */
 .brand-logo {

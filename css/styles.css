@@ -162,7 +162,7 @@ a:hover { color: var(--accent); }
     margin-left: -15px; /* <-- This physically pulls it to the left! */
 }
 .custom-logo { 
-    max-height: 75px; 
+    max-height: 85px; 
     width: auto; 
     object-fit: contain; 
 }

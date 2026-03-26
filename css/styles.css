@@ -331,20 +331,21 @@ a:hover { color: var(--accent); }
   color: #94a3b8;
 }
 
+/* ======== AUTO-SCROLLING LIVE PRICES ======== */
 .price-row {
   display: flex;
   gap: 8px;
-  overflow-x: auto;
-  padding-bottom: 5px; /* Adds a tiny bit of breathing room at the bottom */
+  overflow: hidden; /* Hides the ugly scrollbar */
+  white-space: nowrap;
   
-  /* Hides the scrollbar but keeps it swipeable! */
-  scrollbar-width: none; /* For Firefox */
-  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+  /* This is the magic line that makes it move automatically */
+  animation: tickerScroll 20s linear infinite; 
 }
 
-/* Hides the scrollbar for Chrome, Safari, and Mobile Browsers */
-.price-row::-webkit-scrollbar {
-  display: none;
+/* This controls the movement from Right to Left */
+@keyframes tickerScroll {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-150%); }
 }
 
 .price-card {

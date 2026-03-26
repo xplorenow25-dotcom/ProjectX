@@ -157,3 +157,49 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('fee-after').textContent = format(amountAfter);
     }['fee-size', 'fee-pct'].forEach(id => document.getElementById(id)?.addEventListener('input', calcFees));
 });
+// 🔥 Live Crypto Prices
+const coins = [
+  { id: "bitcoin", symbol: "BTC" },
+  { id: "ethereum", symbol: "ETH" },
+  { id: "ripple", symbol: "XRP" },
+  { id: "binancecoin", symbol: "BNB" },
+  { id: "solana", symbol: "SOL" }
+];
+
+async function loadPrices() {
+  try {
+    const ids = coins.map(c => c.id).join(",");
+    const url = `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true`;
+
+    const res = await fetch(url);
+    const data = await res.json();
+
+    const container = document.getElementById("cryptoPrices");
+    if (!container) return; // prevents errors on other pages
+
+    container.innerHTML = "";
+
+    coins.forEach(c => {
+      const price = data[c.id].usd;
+      const change = data[c.id].usd_24h_change;
+      const up = change >= 0;
+
+      container.innerHTML += `
+        <div class="price-card">
+          <strong>${c.symbol}</strong>
+          <div class="price">$${price.toLocaleString()}</div>
+          <div class="change ${up ? "green" : "red"}">
+            ${up ? "▲" : "▼"} ${change.toFixed(2)}%
+          </div>
+        </div>
+      `;
+    });
+
+  } catch (err) {
+    console.error("Price fetch error:", err);
+  }
+}
+
+// Run only if section exists
+loadPrices();
+setInterval(loadPrices, 20000);

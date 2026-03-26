@@ -320,42 +320,32 @@ a:hover { color: var(--accent); }
 .btn-reject:hover {
     background: rgba(255, 255, 255, 0.05);
 }
-/* 🔥 Live Prices Section */
 .live-prices {
-  margin: 30px 0;
+  margin: 20px 0 10px;
   padding: 0 15px;
 }
 
 .live-prices h2 {
-  font-size: 16px;
-  margin-bottom: 10px;
+  font-size: 14px;
+  margin-bottom: 8px;
   color: #94a3b8;
 }
 
 .price-row {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   overflow-x: auto;
-  padding-bottom: 10px;
 }
 
 .price-card {
-  min-width: 110px;
-  background: #1e293b;
-  padding: 10px;
-  border-radius: 10px;
+  min-width: 90px;
+  background: rgba(30, 41, 59, 0.6);
+  padding: 8px;
+  border-radius: 8px;
   text-align: center;
+  backdrop-filter: blur(6px);
 }
 
 .price {
-  font-size: 14px;
-  margin: 5px 0;
+  font-size: 13px;
 }
-
-.change {
-  font-size: 12px;
-  font-weight: bold;
-}
-
-.green { color: #22c55e; }
-.red { color: #ef4444; }

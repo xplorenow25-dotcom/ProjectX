@@ -322,34 +322,67 @@ a:hover { color: var(--accent); }
 }
 
 /* ======== AUTO-SCROLLING LIVE PRICES ======== */
+/* 🔥 Live Crypto Ticker */
+
 .live-prices {
-  margin: 20px 0 10px;
+  margin: 15px 0 5px;
   padding: 0 15px;
 }
 
-.live-prices h2 {
-  font-size: 14px;
-  margin-bottom: 8px;
-  color: #94a3b8;
-}
-
-.price-row {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-}
-
-.price-card {
-  min-width: 90px;
-  background: rgba(30, 41, 59, 0.6);
-  padding: 8px;
+/* Container */
+.ticker-wrapper {
+  overflow: hidden;
+  width: 100%;
   border-radius: 8px;
-  text-align: center;
-  backdrop-filter: blur(6px);
+  background: rgba(30, 41, 59, 0.5);
+  padding: 8px 0;
 }
 
-.price {
+/* Moving row */
+.ticker {
+  display: flex;
+  gap: 30px;
+  white-space: nowrap;
+  animation: scrollTicker 30s linear infinite;
+}
+
+/* Each coin */
+.ticker-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 13px;
+  color: #e2e8f0;
+}
+
+/* Symbol style */
+.ticker-item strong {
+  color: #22c55e;
+}
+
+/* Animation */
+@keyframes scrollTicker {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Pause on hover (optional but pro) */
+.ticker-wrapper:hover .ticker {
+  animation-play-state: paused;
+}
+/* Price colors */
+.green {
+  color: #22c55e;
+  font-weight: 500;
+}
+
+.red {
+  color: #ef4444;
+  font-weight: 500;
 }
 /* ======== FAR-LEFT LOGO & GREEN PRO TEXT ======== */
 .brand-logo {

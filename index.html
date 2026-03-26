@@ -47,12 +47,40 @@
             <h1 class="hero-title">Crypto Profit Calculator</h1>
             <p class="hero-subtitle">Calculate your potential profits, fees, and liquidations instantly.</p>
         </section>
-        <!-- 🔥 Live Crypto Ticker -->
-<section class="live-prices">
-  <div class="ticker-wrapper">
-    <div class="ticker" id="cryptoPrices"></div>
-  </div>
-</section>
+        
+        <!-- LIVE AUTO-SCROLLING CRYPTO TICKER -->
+        <div class="ticker-wrapper">
+            <!-- This track holds the cards and moves them -->
+            <div class="ticker-track" id="crypto-ticker-track">
+                
+                <!-- COIN CARDS -->
+                <div class="ticker-card">
+                    <span class="ticker-coin">BTC</span>
+                    <span class="ticker-price" id="price-btc">Loading...</span>
+                </div>
+                
+                <div class="ticker-card">
+                    <span class="ticker-coin">ETH</span>
+                    <span class="ticker-price" id="price-eth">Loading...</span>
+                </div>
+                
+                <div class="ticker-card">
+                    <span class="ticker-coin">XRP</span>
+                    <span class="ticker-price" id="price-xrp">Loading...</span>
+                </div>
+                
+                <div class="ticker-card">
+                    <span class="ticker-coin">BNB</span>
+                    <span class="ticker-price" id="price-bnb">Loading...</span>
+                </div>
+                
+                <div class="ticker-card">
+                    <span class="ticker-coin">SOL</span>
+                    <span class="ticker-price" id="price-sol">Loading...</span>
+                </div>
+
+            </div>
+        </div>
         <!-- CAPSULE NAVIGATION -->
         <div class="capsule-nav">
             <button class="tab-btn active" onclick="switchTab('spot')">Spot</button>

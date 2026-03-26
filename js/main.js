@@ -184,23 +184,16 @@ async function loadTicker() {
 
     coins.forEach(c => {
   const price = data[c.id]?.usd;
-  const change = data[c.id]?.usd_24h_change;
 
-  if (price !== undefined && change !== undefined) {
-    const isUp = change >= 0;
-
+  if (price !== undefined) {
     items += `
       <div class="ticker-item">
-        <strong>${c.symbol}</strong>
-        <span class="${isUp ? "green" : "red"}">
-          ${isUp ? "▲" : "▼"} $${price.toLocaleString()}
-        </span>
-        <span>•</span>
+        <span class="coin">${c.symbol}</span>
+        <span class="price">$${price.toLocaleString()}</span>
       </div>
     `;
   }
 });
-
     container.innerHTML = items + items;
 
   } catch (err) {

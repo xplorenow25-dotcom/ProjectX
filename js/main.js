@@ -204,12 +204,44 @@ async function loadTicker() {
 // Run
 loadTicker();
 setInterval(loadTicker, 60000);
-// --- SEAMLESS INFINITE TICKER LOGIC ---
-    // Waits 2 seconds for your CoinGecko API to load prices, then clones the boxes
-    setTimeout(() => {
-        const track = document.getElementById('crypto-ticker-track');
-        if(track) {
-            const content = track.innerHTML;
-            track.innerHTML = content + content; // Duplicates the cards for an infinite scroll loop
+// ==========================================
+    // --- LIVE COINGECKO API & TICKER LOGIC ---
+    // ==========================================
+    async function fetchCryptoPrices() {
+        try {
+            // Fetch live prices for BTC, ETH, XRP, BNB, and SOL
+            const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,ripple,binancecoin,solana&vs_currencies=usd');
+            const data = await response.json();
+
+            // Function to format numbers nicely (e.g., $68,000.00)
+            const formatPrice = (price) => {
+                if (price < 2) return '$' + price.toFixed(4); // For small coins like XRP
+                return '$' + price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            };
+
+            // Inject the live prices into your new HTML cards
+            if(document.getElementById('price-btc')) document.getElementById('price-btc').textContent = formatPrice(data.bitcoin.usd);
+            if(document.getElementById('price-eth')) document.getElementById('price-eth').textContent = formatPrice(data.ethereum.usd);
+            if(document.getElementById('price-xrp')) document.getElementById('price-xrp').textContent = formatPrice(data.ripple.usd);
+            if(document.getElementById('price-bnb')) document.getElementById('price-bnb').textContent = formatPrice(data.binancecoin.usd);
+            if(document.getElementById('price-sol')) document.getElementById('price-sol').textContent = formatPrice(data.solana.usd);
+
+        } catch (error) {
+            console.error("API Error:", error);
+            // If CoinGecko is busy, it shows "Unavailable" instead of being stuck on Loading
+            const ids =['price-btc', 'price-eth', 'price-xrp', 'price-bnb', 'price-sol'];
+            ids.forEach(id => {
+                if(document.getElementById(id)) document.getElementById(id).textContent = "Unavailable";
+            });
+        } finally {
+            // AFTER prices load (or fail), duplicate the cards for the infinite seamless scroll!
+            const track = document.getElementById('crypto-ticker-track');
+            if(track) {
+                const content = track.innerHTML;
+                track.innerHTML = content + content; 
+            }
         }
-    }, 2000);
+    }
+
+    // Run the API fetch immediately when the page loads!
+    fetchCryptoPrices();

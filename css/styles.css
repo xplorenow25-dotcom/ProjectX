@@ -21,16 +21,53 @@ a:hover { color: var(--accent); }
 .nav-title span { color: var(--accent); }
 .mobile-menu-btn { color: white; background: none; border: none; font-size: 1.8rem; cursor: pointer; }
 
-/* Side Drawer Menu */
-.menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 99; opacity: 0; visibility: hidden; transition: 0.3s; }
+/* ======== UPGRADED SIDE DRAWER MENU ======== */
+.menu-overlay { 
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+    background: rgba(0,0,0,0.6); 
+    backdrop-filter: blur(5px); /* Premium glass blur effect */
+    z-index: 99; opacity: 0; visibility: hidden; 
+    transition: all 0.4s ease; 
+}
 .menu-overlay.active { opacity: 1; visibility: visible; }
-.side-drawer { position: fixed; top: 0; right: -100%; width: 75%; max-width: 320px; height: 100vh; background: var(--card-bg); z-index: 100; transition: right 0.3s ease; box-shadow: -5px 0 15px rgba(0,0,0,0.5); display: flex; flex-direction: column; }
+
+.side-drawer { 
+    position: fixed; top: 0; right: -100%; 
+    width: 75%; max-width: 320px; height: 100vh; 
+    background: #090C15; /* Darker, sleeker menu background */
+    border-left: 1px solid var(--card-border);
+    z-index: 100; 
+    /* Extremely smooth native-app slide animation */
+    transition: right 0.4s cubic-bezier(0.25, 1, 0.5, 1); 
+    box-shadow: -10px 0 30px rgba(0,0,0,0.8); 
+    display: flex; flex-direction: column; 
+}
 .side-drawer.active { right: 0; }
-.drawer-header { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid var(--card-border); }
-.close-btn { background: none; border: none; color: #fff; font-size: 1.8rem; cursor: pointer; }
-.drawer-links { list-style: none; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; }
-.drawer-links li a { font-size: 1.1rem; color: #fff; font-weight: 500; }
-.drawer-links li a.active-link { color: var(--accent); }
+
+.drawer-header { 
+    display: flex; justify-content: space-between; align-items: center; 
+    padding: 1.5rem; 
+    border-bottom: 1px solid rgba(255,255,255,0.05); 
+}
+.close-btn { 
+    background: none; border: none; color: #9CA3AF; 
+    font-size: 1.8rem; cursor: pointer; 
+    transition: transform 0.3s, color 0.3s; 
+}
+.close-btn:hover { color: #fff; transform: rotate(90deg); }
+
+.drawer-links { 
+    list-style: none; padding: 2rem 1.5rem; 
+    display: flex; flex-direction: column; gap: 1.5rem; 
+}
+.drawer-links li a { 
+    font-size: 1.15rem; color: #9CA3AF; font-weight: 500; 
+    display: block; 
+    transition: all 0.3s ease; /* Smooth hover transition */
+}
+/* Links slide to the right and turn white when touched/hovered */
+.drawer-links li a:hover { color: #fff; transform: translateX(10px); }
+.drawer-links li a.active-link { color: var(--accent); font-weight: 700; }
 
 /* Hero */
 .hero { padding: 3rem 0 1rem; display: flex; flex-direction: column; align-items: center; justify-content: center; }

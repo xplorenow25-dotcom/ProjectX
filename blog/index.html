@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trading Blog | CryptoMerticPro</title>
+    <title>Trading Blog | CryptoMetricPro</title>
     <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
@@ -11,8 +11,9 @@
     <!-- MODERN APP NAVBAR -->
     <nav class="navbar modern-nav">
         <div class="container nav-container">
-            <a href="../index.html" class="logo-box">CMP</a>
-            <a href="../index.html" class="nav-title">CryptoCalc<span>Pro</span></a>
+            <a href="../index.html" class="brand-logo">
+                <img src="../logo.png" alt="CryptoMetricPro Logo" class="custom-logo">
+            </a>
             <button class="mobile-menu-btn" id="menu-toggle">☰</button>
         </div>
     </nav>
@@ -21,8 +22,9 @@
     <div class="menu-overlay" id="menu-overlay"></div>
     <div class="side-drawer" id="side-drawer">
         <div class="drawer-header">
-            <div class="logo-box">CMP</div>
-            <a href="../index.html" class="nav-title">CryptoMetric<span>Pro</span></a>
+            <a href="../index.html" class="brand-logo">
+                <img src="../logo.png" alt="CryptoMetricPro" class="custom-logo">
+            </a>
             <button class="close-btn" id="menu-close">✕</button>
         </div>
         <ul class="drawer-links">
@@ -42,8 +44,6 @@
 
         <!-- BLOG GRID -->
         <div class="blog-grid" style="margin-bottom: 4rem;">
-            
-            <!-- FEATURED POST -->
             <a href="post.html" class="blog-card featured-post">
                 <img src="https://images.unsplash.com/photo-1621416894569-0f39ed31d247?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Crypto Chart" class="blog-img">
                 <div class="blog-content">
@@ -51,63 +51,39 @@
                     <h2 class="blog-title">How to Use Leverage Responsibly in 2026</h2>
                     <p class="blog-desc">Leverage can be a powerful tool or a quick way to liquidate your portfolio. Learn how to calculate margin properly to protect your capital.</p>
                     <div class="blog-meta">
-                        <div>
-                            <img src="https://i.pravatar.cc/100?img=33" alt="Author" class="author-avatar">
-                            <span>Alex Mercer</span>
-                        </div>
+                        <div><img src="https://i.pravatar.cc/100?img=33" alt="Author" class="author-avatar"><span>Alex Mercer</span></div>
                         <span>Oct 12 • 5 min read</span>
                     </div>
                 </div>
             </a>
-
-            <!-- SECONDARY POST 1 -->
             <a href="post.html" class="blog-card">
                 <img src="https://images.unsplash.com/photo-1622630998477-20b41cd0e073?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Bitcoin Coin" class="blog-img">
                 <div class="blog-content">
                     <span class="blog-tag" style="color: #3B82F6;">Markets</span>
                     <h2 class="blog-title">Spot vs Futures: Which is Better?</h2>
                     <p class="blog-desc">Understanding the fundamental differences between owning an asset and trading a derivative contract.</p>
-                    <div class="blog-meta">
-                        <span>Sarah Jenkins</span>
-                        <span>Oct 05 • 4 min read</span>
-                    </div>
+                    <div class="blog-meta"><span>Sarah Jenkins</span><span>Oct 05 • 4 min read</span></div>
                 </div>
             </a>
-
-            <!-- SECONDARY POST 2 -->
-            <a href="post.html" class="blog-card">
-                <img src="https://images.unsplash.com/photo-1639762681485-074b7f4ec651?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Exchange App" class="blog-img">
-                <div class="blog-content">
-                    <span class="blog-tag" style="color: #EAB308;">Tutorial</span>
-                    <h2 class="blog-title">Minimizing Exchange Fees</h2>
-                    <p class="blog-desc">Don't let hidden fees eat into your profits. A deep dive into Maker vs Taker fees and how to avoid them.</p>
-                    <div class="blog-meta">
-                        <span>Alex Mercer</span>
-                        <span>Sep 28 • 6 min read</span>
-                    </div>
-                </div>
-            </a>
-
         </div>
     </main>
 
-    <!-- FULL RESTORED FOOTER -->
+    <!-- FOOTER WITH CUSTOM LOGO -->
     <footer class="site-footer">
         <div class="container text-center">
-            <h3 style="color: #fff; margin-bottom: 1rem; font-size: 1.4rem;">CryptoCalcPro</h3>
+            <div style="margin-bottom: 1rem; display: flex; justify-content: center;">
+                <img src="../logo.png" alt="CryptoMetricPro" style="max-height: 50px; width: auto; object-fit: contain;">
+            </div>
             <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem; max-width: 400px; margin-left: auto; margin-right: auto;">Providing retail traders with fast, secure, and professional position planning tools.</p>
             
-            <div class="footer-links" style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 2rem;">
+            <div class="footer-links" style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
                 <a href="../about.html" style="font-weight: 500;">About Us</a>
                 <a href="../contact.html" style="font-weight: 500;">Contact</a>
                 <a href="../privacy.html" style="font-weight: 500;">Privacy Policy</a>
                 <a href="../terms.html" style="font-weight: 500;">Terms of Service</a>
                 <a href="../disclaimer.html" style="font-weight: 500;">Disclaimer</a>
             </div>
-            
-            <div style="border-top: 1px solid var(--card-border); padding-top: 1.5rem; margin-top: 1.5rem;">
-                <p style="color: var(--text-muted); font-size: 0.8rem;">&copy; 2026 CryptoCalcPro. All rights reserved. The calculators provided are for informational and educational purposes only. Nothing on this website constitutes financial or investment advice.</p>
-            </div>
+            <p style="color: var(--text-muted); font-size: 0.8rem;">&copy; 2026 CryptoMetricPro. All rights reserved.</p>
         </div>
     </footer>
 

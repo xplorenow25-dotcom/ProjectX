@@ -349,3 +349,11 @@ a:hover { color: var(--accent); }
 .price {
   font-size: 13px;
 }
+/* ======== BRAND NAME TEXT BESIDE LOGO ======== */
+.brand-name {
+    color: #fff;
+    font-size: 1.3rem; /* Adjust this to match your logo size */
+    font-weight: 800; /* Makes it thick and bold like CoinGecko */
+    margin-left: 0.6rem; /* Creates the perfect gap between the image and the text */
+    letter-spacing: -0.5px; /* Gives it a modern, tight SaaS look */
+}

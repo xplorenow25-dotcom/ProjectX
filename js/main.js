@@ -184,6 +184,16 @@ document.addEventListener('DOMContentLoaded', () => {
     feeInputs.forEach(id => document.getElementById(id)?.addEventListener('input', calcFees));
 
     // --- 9. LIVE COINGECKO API & TICKER LOGIC ---
+    
+    // 1. Instantly clone the track so it starts scrolling the millisecond the page loads!
+    const track = document.getElementById('crypto-ticker-track');
+    if(track && !track.dataset.cloned) {
+        const content = track.innerHTML;
+        track.innerHTML = content + content; 
+        track.dataset.cloned = "true"; 
+    }
+
+    // 2. Fetch the live prices silently in the background
     async function fetchCryptoPrices() {
         try {
             const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,ripple,binancecoin,solana&vs_currencies=usd');
@@ -203,26 +213,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 'price-sol': data.solana.usd
             };
 
-            // Safely updates EVERY box perfectly using classes instead of IDs
+            // Updates the numbers invisibly while they are scrolling
             for (const [coinClass, price] of Object.entries(updates)) {
                 const elements = document.querySelectorAll(`.${coinClass}`);
                 elements.forEach(el => el.textContent = formatPrice(price));
             }
 
         } catch (error) {
-            console.log("CoinGecko API resting. Keeping last known prices.");
+            console.log("API busy. Using placeholder prices.");
+            // We do nothing here! The realistic placeholder prices will just keep scrolling smoothly.
         }
     }
 
-    // Runs fetch, THEN clones the track for the infinite loop
-    fetchCryptoPrices().then(() => {
-        const track = document.getElementById('crypto-ticker-track');
-        if(track && !track.dataset.cloned) {
-            const content = track.innerHTML;
-            track.innerHTML = content + content; 
-            track.dataset.cloned = "true"; 
-        }
-    });
-    
-    // Auto-updates in the background every 60 seconds
+    // Fetch live prices on load, and auto-update every 60 seconds
+    fetchCryptoPrices();
     setInterval(fetchCryptoPrices, 60000);

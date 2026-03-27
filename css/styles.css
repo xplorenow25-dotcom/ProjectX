@@ -110,7 +110,7 @@ a:hover { color: var(--accent); }
 
 /* ======== PREMIUM CALCULATOR LAYOUT ======== */
 .premium-card {
-    background: var(--card-bg);
+    background: var(--bg-color); /* This perfectly matches the website background! */
     border: 1px solid var(--card-border);
     border-radius: 1.2rem;
     padding: 1.5rem;
@@ -134,7 +134,7 @@ a:hover { color: var(--accent); }
 /* Direction Toggle (Long/Short) */
 .direction-toggle {
     display: flex;
-    background: var(--bg-color);
+    background: var(--input-bg); /* Made slightly darker so it still pops! */
     border-radius: 0.5rem;
     border: 1px solid var(--card-border);
     overflow: hidden;

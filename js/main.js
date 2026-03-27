@@ -235,3 +235,5 @@ document.addEventListener('DOMContentLoaded', () => {
     // Fetch live prices immediately, and auto-update every 10 seconds!
     fetchCryptoPrices();
     setInterval(fetchCryptoPrices, 10000);
+
+});

@@ -536,3 +536,54 @@ button, input, textarea, select {
 .article-body strong {
     font-weight: 600;
 }
+/* ======================================================= */
+/* ======== DESKTOP & TABLET RESPONSIVENESS UPGRADE ======== */
+/* ======================================================= */
+
+/* 1. Expand the entire website to full desktop width */
+.container { max-width: 1200px !important; }
+
+/* 2. Keep specific elements perfectly centered so they don't stretch too wide */
+.capsule-nav { max-width: 500px; margin-left: auto; margin-right: auto; }
+.calc-global-header { max-width: 950px; margin-left: auto; margin-right: auto; }
+.app-layout { max-width: 950px; margin: 0 auto; }
+.blog-list-minimal { max-width: 800px; margin-left: auto; margin-right: auto; }
+.calc-card-modern { max-width: 600px; margin-left: auto; margin-right: auto; } /* Keeps Contact form neat */
+
+/* 3. TABLET & SMALL DESKTOP SCREENS */
+@media (min-width: 768px) {
+    
+    /* Make the Calculators Side-by-Side (Inputs Left, Results Right) */
+    .tab-content.active {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        align-items: start;
+    }
+    
+    /* Removes the mobile spacing since they are side-by-side now */
+    .premium-card { margin-top: 0 !important; }
+
+    /* Turn the Affiliate Exchanges into a 2-Column Grid */
+    .affiliate-section {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+    
+    /* Keeps the Titles spanning across the top of the grid */
+    .affiliate-section h2, 
+    .affiliate-section p {
+        grid-column: 1 / -1; 
+    }
+    
+    .affiliate-card { margin-bottom: 0; height: 100%; }
+}
+
+/* 4. LARGE DESKTOP MONITORS */
+@media (min-width: 1024px) {
+    /* Expand Exchanges to a massive 3-Column Grid */
+    .affiliate-section {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}

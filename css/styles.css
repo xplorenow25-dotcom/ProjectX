@@ -321,54 +321,55 @@ a:hover { color: var(--accent); }
     background: rgba(255, 255, 255, 0.05);
 }
 
-/* ======== LIVE AUTO-SCROLLING TICKER DESIGN ======== */
+/* ======== FINANCIAL TICKER LAYOUT (NO BOXES) ======== */
 .ticker-wrapper {
     width: 100%;
-    overflow: hidden; /* Hides everything outside the row */
+    overflow: hidden;
     padding: 1rem 0;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
     position: relative;
-    /* This creates the premium faded fade-out effect on the left and right edges! */
+    /* Keeps the premium faded edges */
     -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
     mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
 }
 
 .ticker-track {
     display: flex;
-    gap: 1rem;
+    align-items: center;
     width: max-content;
-    /* 15s is the speed. Lower = faster, Higher = slower */
     animation: scrollTicker 15s linear infinite; 
 }
 
-/* Pauses the scrolling when a user touches it to read a price */
+/* Pauses scrolling on touch/hover */
 .ticker-track:hover {
     animation-play-state: paused;
 }
 
-.ticker-card {
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    padding: 0.8rem 1.8rem;
-    border-radius: 0.8rem;
-    text-align: center;
-    min-width: 110px;
+/* The new layout: No box, just text and a right-side divider */
+.ticker-item {
     display: flex;
     flex-direction: column;
-    gap: 0.4rem;
+    padding: 0 2.5rem; /* Wide spacing between the coins */
+    border-right: 1px solid var(--card-border); /* The vertical line from your screenshot! */
+}
+
+/* Removes the vertical line from the very last item so it loops cleanly */
+.ticker-item:last-child {
+    border-right: none; 
 }
 
 .ticker-coin {
-    color: #fff;
-    font-size: 1.1rem;
-    font-weight: 800;
+    color: #3B82F6; /* The clean, professional blue from your screenshot */
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 0.2rem;
     letter-spacing: 0.5px;
 }
 
 .ticker-price {
-    color: var(--text-muted); /* Changes to green if you prefer var(--accent) */
-    font-size: 0.95rem;
-    font-weight: 500;
+    color: #fff; /* White text so it pops against your dark theme */
+    font-size: 1.15rem;
+    font-weight: 600;
 }
 
 /* The infinite sliding animation */

@@ -76,49 +76,47 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.currency-label').forEach(el => el.textContent = currency);
     }
 
-    // Number Formatter Helper
-    const formatCur = (num) => '$' + Math.abs(num).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-    const formatNum = (num) => Math.abs(num).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    // Utility Function to get Input Values safely
+    const getVal = id => parseFloat(document.getElementById(id).value) || 0;
+    const format = num => Math.abs(num).toFixed(2);
 
     // --- 1. SPOT CALCULATOR LOGIC ---
     function calcSpot() {
         const inv = getVal('spot-inv'), buy = getVal('spot-buy'), sell = getVal('spot-sell'), feePct = getVal('spot-fee');
-        const empty = document.getElementById('spot-empty'), filled = document.getElementById('spot-filled');
+        const sProf = document.getElementById('spot-profit'), sMain = sProf.parentElement;
 
-        if (!inv || !buy || !sell) { empty.style.display = 'block'; filled.style.display = 'none'; return; }
-        
-        empty.style.display = 'none'; filled.style.display = 'block';
+        if (!inv || !buy || !sell) { 
+            sProf.textContent = "0.00"; document.getElementById('spot-roi').textContent = "0.00%"; document.getElementById('spot-total-fees').textContent = "0.00"; sMain.classList.remove('loss'); return; 
+        }
 
         const coins = inv / buy;
         const grossVal = coins * sell;
-        const totalFees = (inv * (feePct / 100)) + (grossVal * (feePct / 100));
+        const buyFee = inv * (feePct / 100);
+        const sellFee = grossVal * (feePct / 100);
+        const totalFees = buyFee + sellFee;
+        
         const netProfit = grossVal - inv - totalFees;
         const roi = (netProfit / inv) * 100;
 
-        const pnlEl = document.getElementById('spot-profit');
-        const roiEl = document.getElementById('spot-roi-pill');
-        
-        pnlEl.textContent = (netProfit >= 0 ? '+' : '-') + formatCur(netProfit);
-        pnlEl.className = 'pnl-value ' + (netProfit >= 0 ? 'color-profit' : 'color-loss');
-        
-        roiEl.textContent = `● ${(netProfit >= 0 ? '+' : '')}${roi.toFixed(2)}% ROI`;
-        roiEl.className = 'roi-pill ' + (netProfit >= 0 ? 'roi-green' : 'roi-red');
+        sProf.textContent = format(netProfit);
+        document.getElementById('spot-roi').textContent = roi.toFixed(2) + "%";
+        document.getElementById('spot-total-fees').textContent = format(totalFees);
 
-        document.getElementById('spot-inv-disp').textContent = formatCur(inv);
-        document.getElementById('spot-buy-disp').textContent = formatCur(buy);
-        document.getElementById('spot-sell-disp').textContent = formatCur(sell);
-        document.getElementById('spot-fees-disp').textContent = '-' + formatCur(totalFees);
+        if(netProfit < 0) { sMain.classList.add('loss'); sProf.textContent = "-" + sProf.textContent; } 
+        else { sMain.classList.remove('loss'); sProf.textContent = "+" + sProf.textContent; }
     }['spot-inv', 'spot-buy', 'spot-sell', 'spot-fee'].forEach(id => document.getElementById(id)?.addEventListener('input', calcSpot));
 
     // --- 2. FUTURES CALCULATOR LOGIC ---
     function calcFut() {
         const isLong = document.getElementById('pos-long').checked;
         const mar = getVal('fut-margin'), lev = getVal('fut-lev'), ent = getVal('fut-entry'), ext = getVal('fut-exit'), feePct = getVal('fut-fee');
-        const empty = document.getElementById('fut-empty'), filled = document.getElementById('fut-filled');
+        const fProf = document.getElementById('fut-profit'), fMain = fProf.parentElement;
 
-        if(!mar || !lev || !ent || !ext) { empty.style.display = 'block'; filled.style.display = 'none'; return; }
-        
-        empty.style.display = 'none'; filled.style.display = 'block';
+        if(!mar || !lev || !ent || !ext) { 
+            fProf.textContent = "0.00"; document.getElementById('fut-roi').textContent = "0.00%"; 
+            document.getElementById('fut-size').textContent = "0.00"; document.getElementById('fut-liq').textContent = "0.00";
+            fMain.classList.remove('loss'); return; 
+        }
 
         const size = mar * lev; 
         const qty = size / ent; 
@@ -132,26 +130,16 @@ document.addEventListener('DOMContentLoaded', () => {
             pnl = (qty * (ent - ext)) - feeCost;
             liq = ent + (ent / lev); 
         }
+        
         const roi = (pnl / mar) * 100;
 
-        const pnlEl = document.getElementById('fut-profit');
-        const roiEl = document.getElementById('fut-roi-pill');
-        const dirEl = document.getElementById('fut-dir-disp');
+        fProf.textContent = format(pnl);
+        document.getElementById('fut-roi').textContent = roi.toFixed(2) + "%";
+        document.getElementById('fut-size').textContent = format(size);
+        document.getElementById('fut-liq').textContent = liq > 0 ? format(liq) : "0.00";
 
-        pnlEl.textContent = (pnl >= 0 ? '+' : '-') + formatCur(pnl);
-        pnlEl.className = 'pnl-value ' + (pnl >= 0 ? 'color-profit' : 'color-loss');
-        
-        roiEl.textContent = `● ${(pnl >= 0 ? '+' : '')}${roi.toFixed(2)}% ROI on Margin`;
-        roiEl.className = 'roi-pill ' + (pnl >= 0 ? 'roi-green' : 'roi-red');
-
-        document.getElementById('fut-size-disp').textContent = formatCur(size);
-        document.getElementById('fut-lev-disp').textContent = formatNum(lev) + '×';
-        
-        dirEl.textContent = isLong ? '▲ Long' : '▼ Short';
-        dirEl.className = isLong ? 'color-profit' : 'color-loss';
-
-        document.getElementById('fut-fees-disp').textContent = '-' + formatCur(feeCost);
-        document.getElementById('fut-liq-disp').textContent = liq > 0 ? formatCur(liq) : "0.00";
+        if(pnl < 0) { fMain.classList.add('loss'); fProf.textContent = "-" + fProf.textContent; }
+        else { fMain.classList.remove('loss'); fProf.textContent = "+" + fProf.textContent; }
     }['fut-margin', 'fut-lev', 'fut-entry', 'fut-exit', 'fut-fee', 'pos-long', 'pos-short'].forEach(id => {
         document.getElementById(id)?.addEventListener('input', calcFut);
         if(id === 'pos-long' || id === 'pos-short') document.getElementById(id)?.addEventListener('change', calcFut);
@@ -160,19 +148,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 3. FEES CALCULATOR LOGIC ---
     function calcFees() {
         const size = getVal('fee-size'), pct = getVal('fee-pct');
-        const empty = document.getElementById('fee-empty'), filled = document.getElementById('fee-filled');
-
-        if(!size || !pct) { empty.style.display = 'block'; filled.style.display = 'none'; return; }
-        
-        empty.style.display = 'none'; filled.style.display = 'block';
+        if(!size || !pct) { document.getElementById('fee-total').textContent = "0.00"; document.getElementById('fee-after').textContent = "0.00"; return; }
         
         const feeCost = size * (pct / 100);
         const amountAfter = size - feeCost;
 
-        document.getElementById('fee-total').textContent = '-' + formatCur(feeCost);
-        document.getElementById('fee-orig-disp').textContent = formatCur(size);
-        document.getElementById('fee-after-disp').textContent = formatCur(amountAfter);
+        document.getElementById('fee-total').textContent = format(feeCost);
+        document.getElementById('fee-after').textContent = format(amountAfter);
     }['fee-size', 'fee-pct'].forEach(id => document.getElementById(id)?.addEventListener('input', calcFees));
+});
 // 🔥 Crypto Ticker with Color Change
 
 const coins = [

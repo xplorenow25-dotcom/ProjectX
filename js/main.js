@@ -76,10 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.currency-label').forEach(el => el.textContent = currency);
     }
 
-    // Utility Function to get Input Values safely
-    const getVal = id => parseFloat(document.getElementById(id).value) || 0;
-    const format = num => Math.abs(num).toFixed(2);
-
     // Number Formatter Helper
     const formatCur = (num) => '$' + Math.abs(num).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
     const formatNum = (num) => Math.abs(num).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});

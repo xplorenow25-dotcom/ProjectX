@@ -203,8 +203,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 'price-sol': data.solana.usd
             };
 
-            for (const [id, price] of Object.entries(updates)) {
-                const elements = document.querySelectorAll(`[id="${id}"]`);
+            // Safely updates EVERY box perfectly using classes instead of IDs
+            for (const [coinClass, price] of Object.entries(updates)) {
+                const elements = document.querySelectorAll(`.${coinClass}`);
                 elements.forEach(el => el.textContent = formatPrice(price));
             }
 
@@ -213,6 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Runs fetch, THEN clones the track for the infinite loop
     fetchCryptoPrices().then(() => {
         const track = document.getElementById('crypto-ticker-track');
         if(track && !track.dataset.cloned) {
@@ -221,6 +223,6 @@ document.addEventListener('DOMContentLoaded', () => {
             track.dataset.cloned = "true"; 
         }
     });
+    
+    // Auto-updates in the background every 60 seconds
     setInterval(fetchCryptoPrices, 60000);
-
-});

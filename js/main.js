@@ -183,9 +183,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const feeInputs =['fee-size', 'fee-pct'];
     feeInputs.forEach(id => document.getElementById(id)?.addEventListener('input', calcFees));
 
-    // --- 9. LIVE COINGECKO API & TICKER LOGIC ---
+    // --- 9. LIVE BINANCE API & TICKER LOGIC ---
     
-    // 1. Instantly clone the track so it starts scrolling the millisecond the page loads!
+    // 1. Instantly clone the track so it scrolls immediately
     const track = document.getElementById('crypto-ticker-track');
     if(track && !track.dataset.cloned) {
         const content = track.innerHTML;
@@ -193,38 +193,42 @@ document.addEventListener('DOMContentLoaded', () => {
         track.dataset.cloned = "true"; 
     }
 
-    // 2. Fetch the live prices silently in the background
+    // 2. Fetch live prices using BINANCE API (No annoying rate limits!)
     async function fetchCryptoPrices() {
         try {
-            const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,ripple,binancecoin,solana&vs_currencies=usd');
-            if (!response.ok) throw new Error('API busy');
+            const response = await fetch('https://api.binance.com/api/v3/ticker/price?symbols=%5B%22BTCUSDT%22,%22ETHUSDT%22,%22XRPUSDT%22,%22BNBUSDT%22,%22SOLUSDT%22%5D');
+            if (!response.ok) throw new Error('API blocked');
             const data = await response.json();
 
-            const formatPrice = (price) => {
-                if (price < 2) return '$' + price.toFixed(4);
-                return '$' + price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            const formatPrice = (priceStr) => {
+                const price = parseFloat(priceStr);
+                if (price < 2) return '$' + price.toFixed(4); // Shows 4 decimals for XRP
+                return '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             };
 
-            const updates = {
-                'price-btc': data.bitcoin.usd,
-                'price-eth': data.ethereum.usd,
-                'price-xrp': data.ripple.usd,
-                'price-bnb': data.binancecoin.usd,
-                'price-sol': data.solana.usd
+            // Map Binance symbols to your HTML classes
+            const symbolMap = {
+                'BTCUSDT': 'price-btc',
+                'ETHUSDT': 'price-eth',
+                'XRPUSDT': 'price-xrp',
+                'BNBUSDT': 'price-bnb',
+                'SOLUSDT': 'price-sol'
             };
 
-            // Updates the numbers invisibly while they are scrolling
-            for (const [coinClass, price] of Object.entries(updates)) {
-                const elements = document.querySelectorAll(`.${coinClass}`);
-                elements.forEach(el => el.textContent = formatPrice(price));
-            }
+            // Instantly updates all scrolling numbers
+            data.forEach(item => {
+                const coinClass = symbolMap[item.symbol];
+                if(coinClass) {
+                    const elements = document.querySelectorAll(`.${coinClass}`);
+                    elements.forEach(el => el.textContent = formatPrice(item.price));
+                }
+            });
 
         } catch (error) {
-            console.log("API busy. Using placeholder prices.");
-            // We do nothing here! The realistic placeholder prices will just keep scrolling smoothly.
+            console.log("Waiting for network connection...");
         }
     }
 
-    // Fetch live prices on load, and auto-update every 60 seconds
+    // Fetch live prices immediately, and auto-update every 10 seconds!
     fetchCryptoPrices();
-    setInterval(fetchCryptoPrices, 60000);
+    setInterval(fetchCryptoPrices, 10000);

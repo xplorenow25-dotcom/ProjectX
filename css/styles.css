@@ -108,93 +108,13 @@ a:hover { color: var(--accent); }
 .input-wrapper input { flex: 1; background: transparent; border: none; color: #fff; font-size: 1rem; outline: none; width: 100%; }
 .currency-label { color: var(--text-muted); font-size: 0.85rem; font-weight: 600; }
 
-/* ======== PREMIUM INSTITUTIONAL LAYOUT ======== */
-.calc-section-title {
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin: 1.5rem 1.5rem 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-}
-.calc-section-title span {
-    display: inline-block;
-    width: 14px;
-    height: 3px;
-    background: #3B82F6; /* The blue dash */
-    border-radius: 2px;
-}
-
-/* The New "Joined" Toggle Button */
-.pro-toggle {
-    display: flex;
-    background: var(--input-bg);
-    border-radius: 0.5rem;
-    border: 1px solid var(--card-border);
-    overflow: hidden;
-}
-.pro-toggle input { display: none; }
-.pro-toggle label {
-    flex: 1; text-align: center; padding: 0.8rem;
-    cursor: pointer; color: var(--text-muted);
-    font-size: 0.9rem; font-weight: 700; transition: 0.3s;
-}
-.pro-toggle input:checked + label[for="pos-long"] { background: rgba(16, 185, 129, 0.15); color: var(--accent); }
-.pro-toggle input:checked + label[for="pos-short"] { background: rgba(239, 68, 68, 0.15); color: var(--accent-loss); }
-
-/* Results Section */
-.results-container {
-    background: transparent;
-    border-top: 1px solid var(--card-border);
-    padding: 2rem 1.5rem;
-}
-.empty-state {
-    text-align: center;
-    color: #4B5563;
-    padding: 2rem 0;
-}
-.empty-state svg {
-    margin-bottom: 1rem;
-    opacity: 0.5;
-}
-.empty-state p { font-size: 0.95rem; }
-
-/* Filled State */
-.pnl-header { text-align: center; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem; }
-.pnl-value { text-align: center; font-size: 2.8rem; font-weight: 800; line-height: 1; margin-bottom: 1rem; letter-spacing: -1px; }
-.roi-pill-wrapper { text-align: center; margin-bottom: 2rem; }
-.roi-pill { display: inline-block; padding: 0.4rem 1rem; border-radius: 2rem; font-size: 0.9rem; font-weight: 700; }
-.roi-green { background: rgba(16, 185, 129, 0.15); color: var(--accent); }
-.roi-red { background: rgba(239, 68, 68, 0.15); color: var(--accent-loss); }
-
-/* The Itemized List */
-.result-breakdown { list-style: none; padding: 0; margin-bottom: 1.5rem; }
-.result-breakdown li {
-    display: flex; justify-content: space-between;
-    padding: 1rem 0;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-    font-size: 0.95rem;
-}
-.result-breakdown li span { color: var(--text-muted); display: flex; align-items: center; font-weight: 500;}
-.result-breakdown li span::before { content: "●"; font-size: 0.5rem; margin-right: 0.8rem; opacity: 0.3; }
-.result-breakdown li strong { color: #fff; font-family: monospace; font-size: 1.05rem; }
-
-.color-profit { color: var(--accent) !important; }
-.color-loss { color: var(--accent-loss) !important; }
-
-/* The Warning Box */
-.warning-box {
-    border: 1px solid rgba(234, 179, 8, 0.3);
-    background: rgba(234, 179, 8, 0.05);
-    color: #EAB308;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    font-size: 0.85rem;
-    line-height: 1.5;
-}
+/* Calculator Results */
+.result-block-modern { background: rgba(11,15,25,0.6); border-top: 1px solid var(--card-border); text-align: center; padding: 2rem 1.5rem; margin-top: 1rem; }
+.result-label { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.5rem; }
+.result-main { font-size: 2.5rem; font-weight: bold; color: var(--accent); line-height: 1; transition: color 0.3s; }
+.result-main.loss { color: var(--accent-loss); }
+.result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; background: var(--bg-color); padding: 1rem; border-radius: 0.5rem; border: 1px solid var(--card-border); }
+.result-sub { font-size: 0.85rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 0.2rem; }
 
 /* Affiliate Cards */
 .affiliate-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 1rem; padding: 1.5rem; text-align: center; margin-bottom: 1rem; }

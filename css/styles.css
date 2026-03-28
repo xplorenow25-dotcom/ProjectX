@@ -603,3 +603,47 @@ button, input, textarea, select {
 /* Dynamic Colors */
 .ticker-change.profit { color: var(--accent); }
 .ticker-change.loss { color: var(--accent-loss); }
+
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Clean, modern font */
+        line-height: 1.8; /* Adds breathing room between lines */
+        color: #333; /* Dark grey is easier on the eyes than pure black */
+        background-color: #f9f9f9;
+    }
+
+    .content-section {
+        max-width: 800px; /* Prevents lines from being too long to read */
+        margin: 50px auto; /* Centers the content */
+        padding: 40px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05); /* Soft shadow for depth */
+    }
+
+    h1 {
+        color: #1a73e8; /* Professional blue often seen in Finance/Tech */
+        border-bottom: 2px solid #eee;
+        padding-bottom: 10px;
+    }
+
+    p {
+        margin-bottom: 20px; /* Space between paragraphs */
+    }
+
+    .contact-info {
+        background-color: #f0f7ff; /* Subtle highlight box for contact info */
+        padding: 20px;
+        border-radius: 5px;
+        margin-top: 30px;
+    }
+
+    a {
+        color: #1a73e8;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+</style>

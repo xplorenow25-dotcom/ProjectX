@@ -255,4 +255,26 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchCryptoPrices();
     setInterval(fetchCryptoPrices, 15000); 
 
+    // --- 10. APPLE-STYLE NATIVE SHARE BUTTON ---
+    const shareBtn = document.getElementById('share-btn');
+    if (shareBtn) {
+        shareBtn.addEventListener('click', async () => {
+            // Checks if the phone supports Native Sharing (iOS/Android)
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: document.title,
+                        url: window.location.href
+                    });
+                } catch (err) {
+                    console.log('User cancelled share.');
+                }
+            } else {
+                // Fallback for older Desktop browsers: Just copy the link
+                navigator.clipboard.writeText(window.location.href);
+                alert("Link copied to clipboard!");
+            }
+        });
+    }
+
 }); // <-- DO NOT DELETE THIS FINAL BRACKET!

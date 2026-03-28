@@ -758,3 +758,23 @@ html, body {
 .tab-btn {
     min-width: 70px; /* Ensures buttons don't get too squished */
 }
+
+/* ======================================================= */
+/* ======== RESTORE MASTER CENTERING ===================== */
+/* ======================================================= */
+
+/* 1. Restores the centering for all Titles, Footers, and Hubs */
+.text-center {
+    text-align: center !important;
+}
+
+/* 2. Ensures the Hero section stacks perfectly in the middle */
+.hero {
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* 3. Ensures the Legal Links in the footer stay centered */
+.footer-links {
+    justify-content: center !important;
+}

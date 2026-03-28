@@ -1,17 +1,36 @@
+/* Import Inter Font directly from Google */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
 :root {
   --bg-color: #0B0F19; --card-bg: #111827; --card-border: #1F2937;
   --input-bg: #090C15;
   --primary: #4F46E5; --accent: #10B981; --accent-loss: #EF4444;
   --text-main: #F3F4F6; --text-muted: #9CA3AF;
-  --font-base: 'Inter', system-ui, sans-serif;
+  /* Perfect Apple-optimized font stack */
+  --font-base: 'Inter', -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-base); }
-body { background-color: var(--bg-color); color: var(--text-main); line-height: 1.6; display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden; }
-a { text-decoration: none; color: var(--text-muted); transition: 0.3s; }
-a:hover { color: var(--accent); }
-.container { max-width: 600px; margin: 0 auto; padding: 0 1.5rem; width: 100%; }
-.text-center { text-align: center; }
+* { 
+  margin: 0; 
+  padding: 0; 
+  box-sizing: border-box; 
+  font-family: var(--font-base); 
+}
+
+body { 
+  background-color: var(--bg-color); 
+  color: var(--text-main); 
+  line-height: 1.6; 
+  display: flex; 
+  flex-direction: column; 
+  min-height: 100vh; 
+  overflow-x: hidden; 
+  
+  /* ======== APPLE PREMIUM FONT SMOOTHING ======== */
+  -webkit-font-smoothing: antialiased; 
+  -moz-osx-font-smoothing: grayscale; 
+  text-rendering: optimizeLegibility;
+}
 
 /* Navbar Layout */
 .navbar { background: rgba(11,15,25,0.95); border-bottom: 1px solid var(--card-border); padding: 1rem 0; position: sticky; top: 0; z-index: 50; backdrop-filter: blur(10px); }
@@ -476,20 +495,6 @@ a:hover { color: var(--accent); }
 }
 .pro-text {
     color: var(--accent); /* This uses your exact bright profit-green! */
-}
-/* CryptoMetricPro Safe Font + Blog Setup */
-
-/* Import Inter font */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
-/* Apply font globally (SAFE – no layout changes) */
-body {
-    font-family: 'Inter', sans-serif;
-}
-
-/* Ensure buttons & inputs also use Inter */
-button, input, textarea, select {
-    font-family: 'Inter', sans-serif;
 }
 
 /* ===== Blog / Article Styling ONLY ===== */

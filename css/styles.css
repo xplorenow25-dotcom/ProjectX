@@ -642,3 +642,49 @@ a:hover { color: var(--accent); }
         font-size: 1.1rem !important;
     }
 }
+
+/* ======== ARTICLE ACTION BAR (BACK & SHARE) ======== */
+.article-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1.5rem 0 2.5rem 0;
+}
+
+/* Capsule Back Button */
+.btn-capsule-nav {
+    background: rgba(11, 15, 25, 0.95); /* Exact match to your Navbar */
+    border: 1px solid var(--card-border);
+    color: #fff;
+    padding: 0.5rem 1.2rem;
+    border-radius: 2rem; /* Creates the Capsule shape */
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+.btn-capsule-nav:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* Apple-Style Circular Share Button */
+.btn-share-apple {
+    background: transparent;
+    border: 1px solid var(--card-border);
+    color: #fff;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%; /* Perfect Circle */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.btn-share-apple:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-2px);
+}

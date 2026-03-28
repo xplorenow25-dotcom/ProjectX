@@ -11,13 +11,10 @@
     <!-- MODERN APP NAVBAR -->
     <nav class="navbar modern-nav">
         <div class="container nav-container">
-            <!-- FAR LEFT: LOGO & TEXT -->
             <a href="index.html" class="brand-logo">
                 <img src="logo.png" alt="CryptoMetricPro Logo" class="custom-logo">
                 <span class="brand-name">CryptoMetric<span class="pro-text">Pro</span></span>
             </a>
-            
-            <!-- FAR RIGHT: MENU BUTTON -->
             <button class="mobile-menu-btn" id="menu-toggle">☰</button>
         </div>
     </nav>
@@ -36,11 +33,12 @@
             <li><a href="index.html">Calculators Home</a></li>
             <li><a href="blog/index.html">Blog & News</a></li>
             <li><a href="learn/index.html">Education Hub</a></li>
-            <li><a href="contact.html">Contact Support</a></li>
+            <li><a href="contact.html" class="active-link">Contact Support</a></li>
         </ul>
     </div>
 
     <main class="container">
+        
         <section class="hero text-center" style="padding-bottom: 1rem;">
             <h1 class="hero-title">Contact Support</h1>
             <p class="hero-subtitle" style="margin-bottom: 2rem;">Have a question about our tools or need to report a bug? Reach out below.</p>
@@ -48,39 +46,60 @@
 
         <!-- MODERN FORM CONTAINER -->
         <div class="calc-card-modern" style="margin-bottom: 4rem; padding-bottom: 2rem;">
-            <form action="#" method="POST" id="contact-form" style="padding-top: 1rem;">
-                <div class="input-block">
-                    <label>Full Name</label>
-                    <div class="input-wrapper">
-                        <input type="text" id="name" name="name" placeholder="Enter your name" required>
+            
+            <!-- FORM WRAPPER (Hides on success) -->
+            <div id="form-wrapper">
+                <form action="#" method="POST" id="contact-form" style="padding-top: 1rem;">
+                    
+                    <div class="input-block">
+                        <label>Full Name</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                        </div>
                     </div>
-                </div>
-                <div class="input-block" style="margin-top: 1rem;">
-                    <label>Email Address</label>
-                    <div class="input-wrapper">
-                        <input type="email" id="email" name="email" placeholder="john@example.com" required>
+
+                    <div class="input-block" style="margin-top: 1rem;">
+                        <label>Email Address</label>
+                        <div class="input-wrapper">
+                            <!-- type="email" and required ensure browser validation! -->
+                            <input type="email" id="email" name="email" placeholder="john@example.com" required>
+                        </div>
                     </div>
-                </div>
-                <div class="input-block" style="margin-top: 1rem;">
-                    <label>Message</label>
-                    <div class="input-wrapper" style="align-items: flex-start; padding-top: 0.8rem;">
-                        <textarea class="modern-textarea" id="message" name="message" placeholder="How can we help?" required></textarea>
+
+                    <div class="input-block" style="margin-top: 1rem;">
+                        <label>Message</label>
+                        <div class="input-wrapper" style="align-items: flex-start; padding-top: 0.8rem;">
+                            <textarea class="modern-textarea" id="message" name="message" placeholder="How can we help?" required></textarea>
+                        </div>
                     </div>
+
+                    <div class="input-block" style="margin-top: 1.5rem; text-align: center;">
+                        <button type="submit" class="btn-green" style="width: 100%; font-size: 1.1rem; padding: 0.8rem;">Send Message</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- SUCCESS WRAPPER (Shows on success) -->
+            <div id="success-wrapper" class="hidden text-center success-state-box">
+                <div class="success-icon-container">
+                    <!-- Animated Glowing SVG Checkmark -->
+                    <svg class="checkmark-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                        <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+                        <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                    </svg>
                 </div>
-                <div class="input-block" style="margin-top: 1.5rem; text-align: center;">
-                    <button type="submit" class="btn-green" style="width: 100%; font-size: 1.1rem; padding: 0.8rem;">Send Message</button>
-                </div>
-            </form>
+                <h2 style="color: #fff; font-size: 2.2rem; font-weight: 800; margin-bottom: 0.5rem; letter-spacing: -0.5px;">Message Sent!</h2>
+                <p style="color: var(--text-muted); font-size: 1.05rem;">Thanks for reaching out. We'll get back to you within 24 hours.</p>
+            </div>
+
         </div>
+
     </main>
 
-    <!-- FULL RESTORED FOOTER -->
+    <!-- FOOTER WITH CUSTOM LOGO -->
     <footer class="site-footer">
         <div class="container text-center">
-            <!-- BRAND NAME WITH GREEN PRO -->
-            <h3 style="color: #fff; margin-bottom: 1rem; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px;">CryptoMetric<span class="pro-text">Pro</span></h3>
-            
-            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 2rem; max-width: 400px; margin-left: auto; margin-right: auto;">Providing retail traders with fast, secure, and professional position planning tools.</p>
+            <h3 style="color: #fff; margin-bottom: 1rem; font-size: 1.4rem;">CryptoMetric<span class="pro-text">Pro</span></h3>
             
             <div class="footer-links" style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
                 <a href="about.html" style="font-weight: 500;">About Us</a>
@@ -90,18 +109,22 @@
                 <a href="disclaimer.html" style="font-weight: 500;">Disclaimer</a>
             </div>
             
-            <div style="border-top: 1px solid var(--card-border); padding-top: 1.5rem; margin-top: 1.5rem;">
-                <p style="color: var(--text-muted); font-size: 0.8rem;">&copy; 2026 CryptoMetric<span class="pro-text">Pro</span>. All rights reserved. The calculators provided are for informational and educational purposes only.</p>
-            </div>
+            <p style="color: var(--text-muted); font-size: 0.8rem;">&copy; 2026 CryptoMetricPro. All rights reserved.</p>
         </div>
     </footer>
 
     <script src="js/main.js"></script>
     <script>
+        // The Success State Logic
         document.getElementById('contact-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('Thank you! Your message has been sent to support. (This is a frontend demo)');
-            this.reset();
+            e.preventDefault(); // Stops the page from refreshing
+            
+            // Hide the form
+            document.getElementById('form-wrapper').classList.add('hidden');
+            
+            // Show the success UI with a fade-in effect
+            const successBox = document.getElementById('success-wrapper');
+            successBox.classList.remove('hidden');
         });
     </script>
 </body>

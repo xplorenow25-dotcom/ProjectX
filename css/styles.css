@@ -691,10 +691,14 @@ a:hover { color: var(--accent); }
 
 /* --- Disclaimer Styling for AdSense --- */
 .hero-disclaimer {
-    font-size: 13px;
-    color: #a0a0a0;
-    margin-top: 10px;
+    font-size: 14px;
+    color: #9ca3af;    /* This muted grey looks much more professional */
+    margin-top: 12px;  /* Adds a nice gap from the subtitle */
     font-style: italic;
-    display: block; /* Ensures it stays on its own line */
+    line-height: 1.5;  /* This makes the two lines easier to read on mobile */
+    max-width: 85%;    /* Keeps the text centered and neat */
+    margin-left: auto;
+    margin-right: auto;
     text-align: center;
 }
+

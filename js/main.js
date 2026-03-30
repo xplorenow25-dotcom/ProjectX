@@ -2,16 +2,32 @@
 // --- 1. TAB & MENU SWITCHING LOGIC ---
 // ==========================================
 function switchTab(tabName) {
+    // 1. Switch the capsule buttons
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
     if(event && event.target) event.target.classList.add('active');
     
+    // 2. Switch the tab content
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
     const targetTab = document.getElementById('tab-' + tabName);
     if (targetTab) targetTab.classList.add('active');
 
+    // 3. Update the Header Title
     const titles = { 'spot': 'Spot Calculator', 'futures': 'Futures Calculator', 'fees': 'Fee Calculator' };
     const titleEl = document.getElementById('calc-title');
     if (titleEl && titles[tabName]) titleEl.textContent = titles[tabName];
+
+    // --- NEW: AUTO-RESET CALCULATORS ---
+    // Clears all typed numbers and forces the "Empty State" graphic to come back!
+    document.querySelectorAll('.app-layout input[type="number"]').forEach(input => {
+        input.value = ''; 
+        input.dispatchEvent(new Event('input')); 
+    });
+
+    // Resets the Futures Direction back to LONG
+    const btnLong = document.getElementById('btn-long');
+    if (btnLong && !btnLong.classList.contains('active')) {
+        btnLong.click();
+    }
 }
 
 function closeMenu() {

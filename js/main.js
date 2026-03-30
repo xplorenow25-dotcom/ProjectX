@@ -1,32 +1,26 @@
 // ==========================================
 // --- 1. TAB & MENU SWITCHING LOGIC ---
 // ==========================================
-function switchTab(tabName) {
-    // 1. Switch the capsule buttons
+// Added "preventReset" so shared links don't get wiped!
+function switchTab(tabName, preventReset = false) {
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    if(event && event.target) event.target.classList.add('active');
+    if(event && event.target && event.target.classList) event.target.classList.add('active');
     
-    // 2. Switch the tab content
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
     const targetTab = document.getElementById('tab-' + tabName);
     if (targetTab) targetTab.classList.add('active');
 
-    // 3. Update the Header Title
     const titles = { 'spot': 'Spot Calculator', 'futures': 'Futures Calculator', 'fees': 'Fee Calculator' };
     const titleEl = document.getElementById('calc-title');
     if (titleEl && titles[tabName]) titleEl.textContent = titles[tabName];
 
-    // --- NEW: AUTO-RESET CALCULATORS ---
-    // Clears all typed numbers and forces the "Empty State" graphic to come back!
-    document.querySelectorAll('.app-layout input[type="number"]').forEach(input => {
-        input.value = ''; 
-        input.dispatchEvent(new Event('input')); 
-    });
-
-    // Resets the Futures Direction back to LONG
-    const btnLong = document.getElementById('btn-long');
-    if (btnLong && !btnLong.classList.contains('active')) {
-        btnLong.click();
+    if (!preventReset) {
+        document.querySelectorAll('.app-layout input[type="number"]').forEach(input => {
+            input.value = ''; 
+            input.dispatchEvent(new Event('input')); 
+        });
+        const btnLong = document.getElementById('btn-long');
+        if (btnLong && !btnLong.classList.contains('active')) btnLong.click();
     }
 }
 
@@ -47,10 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const overlay = document.getElementById('menu-overlay');
     
     if (menuBtn && sideDrawer && overlay) {
-        menuBtn.addEventListener('click', () => {
-            sideDrawer.classList.add('active');
-            overlay.classList.add('active');
-        });
+        menuBtn.addEventListener('click', () => { sideDrawer.classList.add('active'); overlay.classList.add('active'); });
         closeBtn.addEventListener('click', closeMenu);
         overlay.addEventListener('click', closeMenu);
     }
@@ -60,13 +51,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (cookieBanner && !localStorage.getItem('cookieConsent')) {
         setTimeout(() => { cookieBanner.classList.add('show'); }, 1500); 
     }
-
     document.getElementById('accept-cookies')?.addEventListener('click', () => {
         localStorage.setItem('cookieConsent', 'accepted');
         cookieBanner.classList.remove('show');
         setTimeout(() => cookieBanner.style.display = 'none', 600);
     });
-
     document.getElementById('reject-cookies')?.addEventListener('click', () => {
         localStorage.setItem('cookieConsent', 'rejected');
         cookieBanner.classList.remove('show');
@@ -100,10 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const inv = getVal('spot-inv'), buy = getVal('spot-buy'), sell = getVal('spot-sell'), feePct = getVal('spot-fee');
         const empty = document.getElementById('spot-empty'), filled = document.getElementById('spot-filled');
 
-        if (!inv || !buy || !sell) { 
-            empty?.classList.remove('hidden'); filled?.classList.add('hidden'); 
-            return; 
-        }
+        if (!inv || !buy || !sell) { empty?.classList.remove('hidden'); filled?.classList.add('hidden'); return; }
         empty?.classList.add('hidden'); filled?.classList.remove('hidden');
 
         const coins = inv / buy;
@@ -131,9 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if(document.getElementById('spot-pnl-sign')) document.getElementById('spot-pnl-sign').textContent = "+"; 
             if(document.getElementById('spot-roi-sign')) document.getElementById('spot-roi-sign').textContent = "+";
         }
-    }
-    const spotInputs =['spot-inv', 'spot-buy', 'spot-sell', 'spot-fee'];
-    spotInputs.forEach(id => document.getElementById(id)?.addEventListener('input', calcSpot));
+    }['spot-inv', 'spot-buy', 'spot-sell', 'spot-fee'].forEach(id => document.getElementById(id)?.addEventListener('input', calcSpot));
 
     // --- 7. FUTURES CALCULATOR ---
     let isLong = true;
@@ -185,9 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if(document.getElementById('fut-pnl-sign')) document.getElementById('fut-pnl-sign').textContent = "+"; 
             if(document.getElementById('fut-roi-sign')) document.getElementById('fut-roi-sign').textContent = "+";
         }
-    }
-    const futInputs =['fut-entry', 'fut-exit', 'fut-lev', 'fut-margin', 'fut-fee'];
-    futInputs.forEach(id => document.getElementById(id)?.addEventListener('input', calcFut));
+    }['fut-entry', 'fut-exit', 'fut-lev', 'fut-margin', 'fut-fee'].forEach(id => document.getElementById(id)?.addEventListener('input', calcFut));
 
     // --- 8. FEES CALCULATOR ---
     function calcFees() {
@@ -203,13 +185,80 @@ document.addEventListener('DOMContentLoaded', () => {
         if(document.getElementById('fee-total')) document.getElementById('fee-total').textContent = formatCur(feeCost);
         if(document.getElementById('fee-after')) document.getElementById('fee-after').textContent = formatCur(amountAfter);
     }
-    const feeInputs = ['fee-size', 'fee-pct'];
-    feeInputs.forEach(id => document.getElementById(id)?.addEventListener('input', calcFees));
+    ['fee-size', 'fee-pct'].forEach(id => document.getElementById(id)?.addEventListener('input', calcFees));
 
     // ==========================================
-    // --- 9. UNBLOCKABLE LIVE TICKER (COINLORE) ---
+    // --- 9. NATIVE SHARING LOGIC ---
     // ==========================================
+    window.shareResult = async function(tool) {
+        let text = '';
+        let params = new URLSearchParams();
+        params.append('tool', tool);
+
+        if (tool === 'spot') {['spot-inv', 'spot-buy', 'spot-sell', 'spot-fee'].forEach(id => params.append(id, getVal(id)));
+            let pnl = document.getElementById('spot-pnl-val')?.textContent || '';
+            text = `Check out this Spot trade! Estimated PnL: ${pnl} 🚀`;
+        } else if (tool === 'futures') {['fut-entry', 'fut-exit', 'fut-lev', 'fut-margin', 'fut-fee'].forEach(id => params.append(id, getVal(id)));
+            params.append('isLong', isLong);
+            let pnl = document.getElementById('fut-pnl-val')?.textContent || '';
+            text = `Check out this Futures trade! Estimated PnL: ${pnl} 🚀`;
+        } else if (tool === 'fees') {
+            ['fee-size', 'fee-pct'].forEach(id => params.append(id, getVal(id)));
+            text = `Calculated my exchange fees on CryptoMetricPro!`;
+        }
+
+        // Creates a special link containing the numbers
+        let shareUrl = window.location.origin + window.location.pathname + '?' + params.toString();
+
+        if (navigator.share) {
+            try { await navigator.share({ title: 'CryptoMetricPro', text: text, url: shareUrl }); } 
+            catch(err) { console.log('Share cancelled'); }
+        } else {
+            navigator.clipboard.writeText(text + '\n' + shareUrl);
+            alert('Trade setup copied to clipboard!');
+        }
+    };
+
+    // ==========================================
+    // --- 10. READ SHARED LINKS ON PAGE LOAD ---
+    // ==========================================
+    const urlParams = new URLSearchParams(window.location.search);
+    const sharedTool = urlParams.get('tool');
     
+    if (sharedTool) {
+        // 1. Activate the correct tab visually
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            if(btn.textContent.toLowerCase().includes(sharedTool.replace('fees', 'fee'))) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+        
+        switchTab(sharedTool, true); // true = prevents inputs from wiping
+
+        // 2. Type the numbers into the boxes
+        if (sharedTool === 'spot') {
+            ['spot-inv', 'spot-buy', 'spot-sell', 'spot-fee'].forEach(id => {
+                if(urlParams.has(id)) document.getElementById(id).value = urlParams.get(id);
+            });
+            document.getElementById('spot-inv')?.dispatchEvent(new Event('input')); // Triggers math
+        } else if (sharedTool === 'futures') {['fut-entry', 'fut-exit', 'fut-lev', 'fut-margin', 'fut-fee'].forEach(id => {
+                if(urlParams.has(id)) document.getElementById(id).value = urlParams.get(id);
+            });
+            if(urlParams.get('isLong') === 'false') document.getElementById('btn-short')?.click();
+            else document.getElementById('fut-entry')?.dispatchEvent(new Event('input'));
+        } else if (sharedTool === 'fees') {
+            ['fee-size', 'fee-pct'].forEach(id => {
+                if(urlParams.has(id)) document.getElementById(id).value = urlParams.get(id);
+            });
+            document.getElementById('fee-size')?.dispatchEvent(new Event('input'));
+        }
+        
+        // 3. Clean up the URL so it looks neat in the browser
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    // ==========================================
+    // --- 11. UNBLOCKABLE LIVE TICKER (COINLORE) ---
+    // ==========================================
     const track = document.getElementById('crypto-ticker-track');
     if(track && !track.dataset.cloned) {
         const content = track.innerHTML;
@@ -229,53 +278,41 @@ document.addEventListener('DOMContentLoaded', () => {
                 return '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             };
 
-            const symbolMap = {
-                'BTC': 'btc',
-                'ETH': 'eth',
-                'XRP': 'xrp',
-                'BNB': 'bnb',
-                'SOL': 'sol'
-            };
+            const symbolMap = { 'BTC': 'btc', 'ETH': 'eth', 'XRP': 'xrp', 'BNB': 'bnb', 'SOL': 'sol' };
 
             if(result && result.data) {
                 result.data.forEach(coin => {
                     const coinKey = symbolMap[coin.symbol];
                     if(coinKey) {
-                        // 1. Update the Price
                         const priceElements = document.querySelectorAll(`.price-${coinKey}`);
                         priceElements.forEach(el => el.textContent = formatPrice(coin.price_usd));
                         
-                        // 2. Update the 24h Percentage Change
                         const changeElements = document.querySelectorAll(`.change-${coinKey}`);
                         const changeVal = parseFloat(coin.percent_change_24h);
                         
                         changeElements.forEach(el => {
                             if (changeVal >= 0) {
                                 el.textContent = `+${changeVal.toFixed(2)}%`;
-                                el.classList.remove('loss');
-                                el.classList.add('profit');
+                                el.classList.remove('loss'); el.classList.add('profit');
                             } else {
-                                el.textContent = `${changeVal.toFixed(2)}%`; // Negative sign is included automatically
-                                el.classList.remove('profit');
-                                el.classList.add('loss');
+                                el.textContent = `${changeVal.toFixed(2)}%`;
+                                el.classList.remove('profit'); el.classList.add('loss');
                             }
                         });
                     }
                 });
             }
-        } catch (error) {
-            console.log("Waiting for network...");
-        }
+        } catch (error) { console.log("Waiting for network..."); }
     }
-
     fetchCryptoPrices();
     setInterval(fetchCryptoPrices, 15000); 
 
-    // --- 10. APPLE-STYLE NATIVE SHARE BUTTON ---
-    const shareBtn = document.getElementById('share-btn');
-    if (shareBtn) {
-        shareBtn.addEventListener('click', async () => {
-            // Checks if the phone supports Native Sharing (iOS/Android)
+    // ==========================================
+    // --- 12. ARTICLE APPLE-STYLE SHARE BUTTON ---
+    // ==========================================
+    const articleShareBtn = document.getElementById('share-btn');
+    if (articleShareBtn) {
+        articleShareBtn.addEventListener('click', async () => {
             if (navigator.share) {
                 try {
                     await navigator.share({
@@ -286,11 +323,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.log('User cancelled share.');
                 }
             } else {
-                // Fallback for older Desktop browsers: Just copy the link
                 navigator.clipboard.writeText(window.location.href);
-                alert("Link copied to clipboard!");
+                alert("Article link copied to clipboard!");
             }
         });
     }
-
+    
 }); // <-- DO NOT DELETE THIS FINAL BRACKET!
+
+              

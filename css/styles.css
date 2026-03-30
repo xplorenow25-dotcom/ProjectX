@@ -184,7 +184,7 @@ a:hover { color: var(--accent); }
 .results-list li { display: flex; justify-content: space-between; align-items: center; }
 .res-label { display: flex; align-items: center; gap: 0.6rem; color: var(--text-muted); font-size: 0.95rem; }
 .res-label::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #4B5563; display: block; }
-.res-val { color: #fff; font-weight: 600; font-size: 1.05rem; font-family: monospace, sans-serif; }
+.res-val { color: #fff; font-weight: 600; font-size: 1.05rem; }
 
 /* Warning Box */
 .warning-box {

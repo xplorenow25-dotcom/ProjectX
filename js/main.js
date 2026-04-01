@@ -328,7 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
+    
     // ==========================================
     // --- 13. DCA CALCULATOR LOGIC & CHART ---
     // ==========================================
@@ -354,25 +354,24 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // Number animation function
+        // UPGRADED: Number animation function safely handles + and - signs
         const animatedCache = {};
-        function animateValue(id, end, isCurrency, isCrypto) {
+        function animateValue(id, end, isCurrency, isCrypto, prefix = '') {
             const el = document.getElementById(id);
             if(!el) return;
             const start = animatedCache[id] || 0;
             animatedCache[id] = end;
-            const duration = 500;
+            const duration = 400;
             let startTimestamp = null;
             const step = (timestamp) => {
                 if (!startTimestamp) startTimestamp = timestamp;
                 const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                // Ease out function
                 const ease = 1 - Math.pow(1 - progress, 3);
                 const current = start + (end - start) * ease;
                 
-                if(isCurrency) el.textContent = '$' + current.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                else if (isCrypto) el.textContent = current.toFixed(6);
-                else el.textContent = current.toFixed(2) + '%';
+                if(isCurrency) el.textContent = prefix + '$' + current.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                else if (isCrypto) el.textContent = prefix + current.toFixed(6);
+                else el.textContent = prefix + current.toFixed(2) + '%';
                 
                 if (progress < 1) window.requestAnimationFrame(step);
             };
@@ -397,20 +396,15 @@ document.addEventListener('DOMContentLoaded', () => {
             tbody.innerHTML = '';
 
             for (let i = 1; i <= buys; i++) {
-                // Apply slippage to buy price
                 const effectivePrice = currentPrice * (1 + slipPct);
-                
-                // Calculate coins bought after fee
                 const coinsBought = (invest / effectivePrice) * (1 - feePct);
                 
                 totalInvested += invest;
                 totalCoins += coinsBought;
                 const avgPrice = totalInvested / totalCoins;
 
-                // Save for chart
                 chartData.push({ buy: i, marketPrice: currentPrice, avgPrice: avgPrice });
 
-                // Add to table
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td style="text-align: left;">Buy ${i}</td>
@@ -421,8 +415,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
                 tbody.appendChild(tr);
 
-                // Simulate price movement for next buy
-                currentPrice = currentPrice * (1 + changePct);
+                // UPGRADED: Injects realistic market volatility so the chart looks authentic!
+                const volatilityWave = Math.sin(i * 0.8) * 0.08; // +/- 8% swings
+                currentPrice = currentPrice * (1 + changePct + volatilityWave);
             }
 
             const finalAvgPrice = totalInvested / totalCoins;
@@ -430,26 +425,23 @@ document.addEventListener('DOMContentLoaded', () => {
             animateValue('res-invested', totalInvested, true, false);
             animateValue('res-coins', totalCoins, false, true);
 
-            // Profit Calculation
+            // UPGRADED: Profit Calculation handles signs perfectly
             const profEl = document.getElementById('res-profit');
             const pctEl = document.getElementById('res-profit-pct');
-            if (target > 0) {
+            
+            if (target > 0 && totalCoins > 0) {
                 const portfolioValue = totalCoins * target;
                 const profit = portfolioValue - totalInvested;
                 const profitPct = (profit / totalInvested) * 100;
                 
-                animateValue('res-profit', Math.abs(profit), true, false);
-                animateValue('res-profit-pct', Math.abs(profitPct), false, false);
+                const sign = profit >= 0 ? '+' : '-';
+                const color = profit >= 0 ? '#00FFA3' : '#EF4444';
+
+                profEl.style.color = color; 
+                pctEl.style.color = color;
                 
-                if (profit >= 0) {
-                    profEl.style.color = '#00FFA3'; pctEl.style.color = '#00FFA3';
-                    profEl.textContent = profEl.textContent.replace('$', '+$');
-                    pctEl.textContent = '+' + pctEl.textContent;
-                } else {
-                    profEl.style.color = '#EF4444'; pctEl.style.color = '#EF4444';
-                    profEl.textContent = profEl.textContent.replace('$', '-$');
-                    pctEl.textContent = '-' + pctEl.textContent;
-                }
+                animateValue('res-profit', Math.abs(profit), true, false, sign);
+                animateValue('res-profit-pct', Math.abs(profitPct), false, false, sign);
             } else {
                 profEl.textContent = "$0.00"; pctEl.textContent = "0.00%";
                 profEl.style.color = '#8A93A6'; pctEl.style.color = '#8A93A6';
@@ -458,11 +450,11 @@ document.addEventListener('DOMContentLoaded', () => {
             drawChart(chartData);
         }
 
-        // Extremely lightweight vanilla JS SVG Line Chart
+        // UPGRADED: Chart prevents division-by-zero crashes
         function drawChart(data) {
             const svg = document.getElementById('dca-chart');
-            svg.innerHTML = ''; // Clear old chart
-            if(data.length < 2) return;
+            svg.innerHTML = ''; 
+            if(data.length < 1) return;
 
             const w = 500; const h = 200;
             const padX = 10; const padY = 20;
@@ -470,9 +462,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const allPrices = data.flatMap(d => [d.marketPrice, d.avgPrice]);
             const minP = Math.min(...allPrices) * 0.95;
             const maxP = Math.max(...allPrices) * 1.05;
+            const range = (maxP - minP) || 1; // Prevents "NaN" chart crashes
             
-            const getX = (index) => padX + (index / (data.length - 1)) * (w - padX * 2);
-            const getY = (price) => h - padY - ((price - minP) / (maxP - minP)) * (h - padY * 2);
+            const getX = (index) => padX + (data.length > 1 ? (index / (data.length - 1)) : 0) * (w - padX * 2);
+            const getY = (price) => h - padY - ((price - minP) / range) * (h - padY * 2);
 
             let marketPts = "", avgPts = "";
             data.forEach((d, i) => {
@@ -481,13 +474,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 avgPts += `${x},${getY(d.avgPrice)} `;
             });
 
-            // Draw Market Line
             const mLine = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
             mLine.setAttribute("points", marketPts.trim());
             mLine.setAttribute("class", "chart-line-market");
             svg.appendChild(mLine);
 
-            // Draw Avg Price Line
             const aLine = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
             aLine.setAttribute("points", avgPts.trim());
             aLine.setAttribute("class", "chart-line-avg");
@@ -496,7 +487,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         inputs.forEach(id => document.getElementById(id).addEventListener('input', calculateDCA));
 
-        // URL Sharing Logic
         window.shareDCA = async function() {
             let params = new URLSearchParams();
             inputs.forEach(id => params.append(id.replace('dca-', ''), getNum(id)));
@@ -511,7 +501,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        // Load Shared URL Data
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('invest')) {
             inputs.forEach(id => {
@@ -529,7 +518,6 @@ document.addEventListener('DOMContentLoaded', () => {
             window.history.replaceState({}, document.title, window.location.pathname);
         }
 
-        // Initial Calculation
         calculateDCA();
     }
     

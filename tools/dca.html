@@ -168,22 +168,26 @@
         </div>
 
         <!-- BREAKDOWN TABLE -->
-        <div class="dca-card" style="margin-top: 2rem; overflow-x: auto;">
+        <div class="dca-card" style="margin-top: 2rem;">
             <div class="dca-card-header">PURCHASE BREAKDOWN</div>
-            <table class="dca-table">
-                <thead>
-                    <tr>
-                        <th>Buy #</th>
-                        <th>Market Price</th>
-                        <th>Invested</th>
-                        <th>Coins Bought</th>
-                        <th>Total Coins</th>
-                    </tr>
-                </thead>
-                <tbody id="dca-table-body">
-                    <!-- JS Injects Rows Here -->
-                </tbody>
-            </table>
+            
+            <!-- This wrapper locks the height and stops the shaking! -->
+            <div style="max-height: 350px; overflow-y: auto; overflow-x: auto; padding-right: 0.5rem;">
+                <table class="dca-table">
+                    <thead style="position: sticky; top: 0; background: #121826; z-index: 10; outline: 1px solid rgba(255,255,255,0.05);">
+                        <tr>
+                            <th>Buy #</th>
+                            <th>Market Price</th>
+                            <th>Invested</th>
+                            <th>Coins Bought</th>
+                            <th>Total Coins</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dca-table-body">
+                        <!-- JS Injects Rows Here -->
+                    </tbody>
+                </table>
+            </div>
         </div>
 
     </main>

@@ -328,6 +328,210 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // ==========================================
+    // --- 13. DCA CALCULATOR LOGIC & CHART ---
+    // ==========================================
+    const dcaContainer = document.getElementById('dca-calculator');
+    if (dcaContainer) {
+        
+        const inputs =['dca-invest', 'dca-price', 'dca-buys', 'dca-target', 'dca-change', 'dca-fee', 'dca-slip'];
+        const getNum = id => parseFloat(document.getElementById(id).value) || 0;
+        
+        // Slider visual update
+        document.getElementById('dca-buys').addEventListener('input', (e) => {
+            document.getElementById('dca-buys-val').textContent = e.target.value;
+        });
+
+        // Toggle buttons logic
+        let freq = 'weekly';
+        document.querySelectorAll('.dca-toggle-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.dca-toggle-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                freq = e.target.dataset.val;
+                calculateDCA();
+            });
+        });
+
+        // Number animation function
+        const animatedCache = {};
+        function animateValue(id, end, isCurrency, isCrypto) {
+            const el = document.getElementById(id);
+            if(!el) return;
+            const start = animatedCache[id] || 0;
+            animatedCache[id] = end;
+            const duration = 500;
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                // Ease out function
+                const ease = 1 - Math.pow(1 - progress, 3);
+                const current = start + (end - start) * ease;
+                
+                if(isCurrency) el.textContent = '$' + current.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                else if (isCrypto) el.textContent = current.toFixed(6);
+                else el.textContent = current.toFixed(2) + '%';
+                
+                if (progress < 1) window.requestAnimationFrame(step);
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        function calculateDCA() {
+            const invest = getNum('dca-invest');
+            const startPrice = getNum('dca-price');
+            const buys = getNum('dca-buys');
+            const target = getNum('dca-target');
+            const changePct = getNum('dca-change') / 100;
+            const feePct = getNum('dca-fee') / 100;
+            const slipPct = getNum('dca-slip') / 100;
+
+            let totalInvested = 0;
+            let totalCoins = 0;
+            let currentPrice = startPrice;
+            
+            const chartData =[];
+            const tbody = document.getElementById('dca-table-body');
+            tbody.innerHTML = '';
+
+            for (let i = 1; i <= buys; i++) {
+                // Apply slippage to buy price
+                const effectivePrice = currentPrice * (1 + slipPct);
+                
+                // Calculate coins bought after fee
+                const coinsBought = (invest / effectivePrice) * (1 - feePct);
+                
+                totalInvested += invest;
+                totalCoins += coinsBought;
+                const avgPrice = totalInvested / totalCoins;
+
+                // Save for chart
+                chartData.push({ buy: i, marketPrice: currentPrice, avgPrice: avgPrice });
+
+                // Add to table
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="text-align: left;">Buy ${i}</td>
+                    <td>$${currentPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                    <td>$${invest.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                    <td style="color: #00FFA3;">+${coinsBought.toFixed(6)}</td>
+                    <td>${totalCoins.toFixed(6)}</td>
+                `;
+                tbody.appendChild(tr);
+
+                // Simulate price movement for next buy
+                currentPrice = currentPrice * (1 + changePct);
+            }
+
+            const finalAvgPrice = totalInvested / totalCoins;
+            animateValue('res-avg-price', finalAvgPrice, true, false);
+            animateValue('res-invested', totalInvested, true, false);
+            animateValue('res-coins', totalCoins, false, true);
+
+            // Profit Calculation
+            const profEl = document.getElementById('res-profit');
+            const pctEl = document.getElementById('res-profit-pct');
+            if (target > 0) {
+                const portfolioValue = totalCoins * target;
+                const profit = portfolioValue - totalInvested;
+                const profitPct = (profit / totalInvested) * 100;
+                
+                animateValue('res-profit', Math.abs(profit), true, false);
+                animateValue('res-profit-pct', Math.abs(profitPct), false, false);
+                
+                if (profit >= 0) {
+                    profEl.style.color = '#00FFA3'; pctEl.style.color = '#00FFA3';
+                    profEl.textContent = profEl.textContent.replace('$', '+$');
+                    pctEl.textContent = '+' + pctEl.textContent;
+                } else {
+                    profEl.style.color = '#EF4444'; pctEl.style.color = '#EF4444';
+                    profEl.textContent = profEl.textContent.replace('$', '-$');
+                    pctEl.textContent = '-' + pctEl.textContent;
+                }
+            } else {
+                profEl.textContent = "$0.00"; pctEl.textContent = "0.00%";
+                profEl.style.color = '#8A93A6'; pctEl.style.color = '#8A93A6';
+            }
+
+            drawChart(chartData);
+        }
+
+        // Extremely lightweight vanilla JS SVG Line Chart
+        function drawChart(data) {
+            const svg = document.getElementById('dca-chart');
+            svg.innerHTML = ''; // Clear old chart
+            if(data.length < 2) return;
+
+            const w = 500; const h = 200;
+            const padX = 10; const padY = 20;
+
+            const allPrices = data.flatMap(d => [d.marketPrice, d.avgPrice]);
+            const minP = Math.min(...allPrices) * 0.95;
+            const maxP = Math.max(...allPrices) * 1.05;
+            
+            const getX = (index) => padX + (index / (data.length - 1)) * (w - padX * 2);
+            const getY = (price) => h - padY - ((price - minP) / (maxP - minP)) * (h - padY * 2);
+
+            let marketPts = "", avgPts = "";
+            data.forEach((d, i) => {
+                const x = getX(i);
+                marketPts += `${x},${getY(d.marketPrice)} `;
+                avgPts += `${x},${getY(d.avgPrice)} `;
+            });
+
+            // Draw Market Line
+            const mLine = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+            mLine.setAttribute("points", marketPts.trim());
+            mLine.setAttribute("class", "chart-line-market");
+            svg.appendChild(mLine);
+
+            // Draw Avg Price Line
+            const aLine = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+            aLine.setAttribute("points", avgPts.trim());
+            aLine.setAttribute("class", "chart-line-avg");
+            svg.appendChild(aLine);
+        }
+
+        inputs.forEach(id => document.getElementById(id).addEventListener('input', calculateDCA));
+
+        // URL Sharing Logic
+        window.shareDCA = async function() {
+            let params = new URLSearchParams();
+            inputs.forEach(id => params.append(id.replace('dca-', ''), getNum(id)));
+            params.append('freq', freq);
+            
+            let shareUrl = window.location.origin + window.location.pathname + '?' + params.toString();
+            if (navigator.share) {
+                try { await navigator.share({ title: 'My DCA Strategy', url: shareUrl }); } catch(err) {}
+            } else {
+                navigator.clipboard.writeText(shareUrl);
+                alert('Strategy Link Copied!');
+            }
+        };
+
+        // Load Shared URL Data
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('invest')) {
+            inputs.forEach(id => {
+                const key = id.replace('dca-', '');
+                if(urlParams.has(key)) document.getElementById(id).value = urlParams.get(key);
+            });
+            const sFreq = urlParams.get('freq');
+            if(sFreq) {
+                document.querySelectorAll('.dca-toggle-btn').forEach(b => {
+                    b.classList.remove('active');
+                    if(b.dataset.val === sFreq) b.classList.add('active');
+                });
+            }
+            document.getElementById('dca-buys-val').textContent = document.getElementById('dca-buys').value;
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+
+        // Initial Calculation
+        calculateDCA();
+    }
     
 }); // <-- DO NOT DELETE THIS FINAL BRACKET!
 

@@ -39,159 +39,107 @@
         </ul>
     </div>
 
-    <main class="container dca-container" id="dca-calculator">
-        
-        <!-- HEADER -->
-        <section class="text-center" style="margin: 2rem 0 3rem;">
-            <h1 style="font-size: 2.2rem; font-weight: 800; color: #E6E8EC;">Crypto DCA Calculator</h1>
-            <p style="color: #8A93A6; font-size: 1rem; max-width: 400px; margin: 0.5rem auto 0;">Simulate your dollar cost averaging strategy and calculate your average buy price instantly.</p>
+    <!-- HEADER -->
+        <section class="text-center" style="margin: 2rem 0 2rem;">
+            <h1 style="font-size: 2.2rem; font-weight: 800; color: #E6E8EC;">Crypto DCA Simulator</h1>
         </section>
 
-        <div class="dca-grid">
+        <!-- CARD 1: INPUTS -->
+        <div class="uph-card">
             
-            <!-- INPUTS CARD -->
-            <div class="dca-card">
-                <div class="dca-card-header">STRATEGY INPUTS</div>
-                
-                <div class="dca-input-block">
-                    <label>Investment per buy</label>
-                    <div class="dca-input-wrapper">
-                        <span class="dca-prefix">$</span>
-                        <input type="number" id="dca-invest" placeholder="100" value="100">
-                    </div>
+            <label class="uph-label">Cryptocurrency</label>
+            <div class="uph-input-box" style="margin-bottom: 0.5rem;">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <!-- Placeholder Icon -->
+                    <div style="width: 24px; height: 24px; background: #627EEA; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: #fff;">E</div>
+                    <select id="uph-asset" style="text-align: left;">
+                        <option value="BTC">Bitcoin (BTC)</option>
+                        <option value="ETH" selected>Ethereum (ETH)</option>
+                        <option value="SOL">Solana (SOL)</option>
+                        <option value="BNB">Binance Coin (BNB)</option>
+                        <option value="XRP">Ripple (XRP)</option>
+                    </select>
                 </div>
-
-                <div class="dca-input-block">
-                    <label>Starting Price</label>
-                    <div class="dca-input-wrapper">
-                        <span class="dca-prefix">$</span>
-                        <input type="number" id="dca-price" placeholder="65000" value="65000">
-                    </div>
-                </div>
-
-                <div class="dca-input-block">
-                    <label style="display: flex; justify-content: space-between;">
-                        <span>Number of Buys</span>
-                        <span id="dca-buys-val" style="color: #00FFA3; font-weight: 700;">12</span>
-                    </label>
-                    <input type="range" id="dca-buys" class="dca-slider" min="1" max="52" value="12">
-                </div>
-
-                <div class="dca-input-block">
-                    <label>Frequency</label>
-                    <div class="dca-toggle-group">
-                        <button class="dca-toggle-btn" data-val="daily">Daily</button>
-                        <button class="dca-toggle-btn active" data-val="weekly">Weekly</button>
-                        <button class="dca-toggle-btn" data-val="monthly">Monthly</button>
-                    </div>
-                </div>
-
-                <div class="dca-input-block">
-                    <label>Target Sell Price (Optional)</label>
-                    <div class="dca-input-wrapper">
-                        <span class="dca-prefix">$</span>
-                        <input type="number" id="dca-target" placeholder="100000" value="100000">
-                    </div>
-                </div>
-                
-                <!-- ADVANCED SETTINGS -->
-                <details class="dca-advanced">
-                    <summary>⚙️ Advanced Settings</summary>
-                    <div class="dca-advanced-content">
-                        <div class="dca-input-block">
-                            <label>Price Change per buy (%)</label>
-                            <div class="dca-input-wrapper">
-                                <input type="number" id="dca-change" placeholder="-5" value="-5" style="padding-left: 1rem;">
-                                <span class="dca-suffix">%</span>
-                            </div>
-                        </div>
-                        <div class="dca-input-block">
-                            <label>Exchange Fee (%)</label>
-                            <div class="dca-input-wrapper">
-                                <input type="number" id="dca-fee" placeholder="0.1" value="0.1" style="padding-left: 1rem;">
-                                <span class="dca-suffix">%</span>
-                            </div>
-                        </div>
-                        <div class="dca-input-block">
-                            <label>Slippage (%)</label>
-                            <div class="dca-input-wrapper">
-                                <input type="number" id="dca-slip" placeholder="0" value="0" style="padding-left: 1rem;">
-                                <span class="dca-suffix">%</span>
-                            </div>
-                        </div>
-                    </div>
-                </details>
             </div>
+            <span class="uph-subtext" style="margin-bottom: 1.5rem;">The crypto asset you want to purchase</span>
 
-            <!-- RESULTS SECTION -->
-            <div class="dca-results-wrapper">
-                
-                <!-- 4 METRIC CARDS -->
-                <div class="dca-metrics-grid">
-                    <div class="dca-metric-card">
-                        <div class="metric-label">Average Buy Price</div>
-                        <div class="metric-value" id="res-avg-price">$0.00</div>
-                    </div>
-                    <div class="dca-metric-card">
-                        <div class="metric-label">Total Invested</div>
-                        <div class="metric-value" id="res-invested">$0.00</div>
-                    </div>
-                    <div class="dca-metric-card">
-                        <div class="metric-label">Coins Accumulated</div>
-                        <div class="metric-value" id="res-coins" style="color: #4DA3FF;">0.000000</div>
-                    </div>
-                    <div class="dca-metric-card">
-                        <div class="metric-label">Profit at Target</div>
-                        <div class="metric-value" id="res-profit" style="color: #00FFA3;">+$0.00</div>
-                        <div class="metric-sub" id="res-profit-pct" style="color: #00FFA3;">+0.00%</div>
-                    </div>
+            <label class="uph-label">Currency</label>
+            <div class="uph-input-box" style="margin-bottom: 0.5rem;">
+                <input type="number" id="uph-amount" value="700">
+                <div style="display: flex; align-items: center; gap: 0.5rem; border-left: 1px solid #2A3241; padding-left: 1rem;">
+                    🇺🇸 USD
                 </div>
+            </div>
+            <span class="uph-subtext" style="margin-bottom: 1.5rem;">The currency you want to exchange</span>
 
-                <!-- CHART -->
-                <div class="dca-card" style="margin-top: 1.5rem; padding: 1rem;">
-                    <div class="dca-card-header" style="margin-bottom: 1rem;">COST BASIS CHART</div>
-                    <div class="dca-chart-container">
-                        <svg id="dca-chart" viewBox="0 0 500 200" preserveAspectRatio="none"></svg>
-                    </div>
-                    <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 0.8rem; font-size: 0.8rem; color: #8A93A6;">
-                        <span style="display: flex; align-items: center; gap: 0.3rem;"><div style="width: 10px; height: 10px; background: #4DA3FF; border-radius: 50%;"></div> Market Price</span>
-                        <span style="display: flex; align-items: center; gap: 0.3rem;"><div style="width: 10px; height: 10px; background: #00FFA3; border-radius: 50%;"></div> Avg Buy Price</span>
-                    </div>
+            <!-- ROWS -->
+            <div class="uph-row">
+                <div class="uph-row-title">🔄 Repeat</div>
+                <select id="uph-freq">
+                    <option value="monthly" selected>Monthly</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="daily">Daily</option>
+                </select>
+            </div>
+            <div class="uph-row">
+                <div class="uph-row-title">📅 Start</div>
+                <input type="month" id="uph-start" value="2026-01" class="uph-date-picker">
+            </div>
+            <div class="uph-row">
+                <div class="uph-row-title">📅 End</div>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <input type="month" id="uph-end" value="2026-04" class="uph-date-picker">
+                    <span id="uph-buy-count" style="color: #8A93A6; font-size: 0.9rem;">(x4)</span>
                 </div>
-
-                <!-- SHARE BUTTON -->
-                <button class="dca-share-btn" onclick="shareDCA()">
-                    Share Strategy
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
-                </button>
             </div>
         </div>
 
-        <!-- BREAKDOWN TABLE -->
-        <div class="dca-card" style="margin-top: 2rem;">
-            <div class="dca-card-header">PURCHASE BREAKDOWN</div>
-            
-            <!-- This new wrapper stops the page from jumping! -->
-            <div class="table-scroll-box">
-                <table class="dca-table">
-                    <thead>
-                        <tr>
-                            <th>Buy #</th>
-                            <th>Market Price</th>
-                            <th>Invested</th>
-                            <th>Coins Bought</th>
-                            <th>Total Coins</th>
-                        </tr>
-                    </thead>
-                    <tbody id="dca-table-body">
-                        <!-- JS Injects Rows Here -->
-                    </tbody>
-                </table>
+        <!-- CARD 2: CHART & RESULTS -->
+        <div class="uph-card">
+            <h2 class="uph-title">Portfolio over time</h2>
+            <div class="uph-date">Date: <strong id="uph-display-date">04/2026</strong></div>
+
+            <div class="uph-grid">
+                <div>
+                    <div class="uph-stat-label">Total purchase</div>
+                    <div class="uph-stat-val-blue" id="uph-res-invested">$2,800</div>
+                </div>
+                <div>
+                    <div class="uph-stat-label">Total value*</div>
+                    <div class="uph-stat-val-green" id="uph-res-value">$2,577.15</div>
+                    <div class="uph-stat-sub" id="uph-res-coins">1.21624 ETH</div>
+                    <div class="uph-stat-sub" id="uph-res-pct" style="color: #EF4444;">-7.96%</div>
+                </div>
             </div>
 
+            <!-- AREA CHART -->
+            <div class="uph-chart-wrapper">
+                <div class="uph-y-axis" id="uph-y-axis"></div>
+                <svg id="uph-svg" viewBox="0 0 500 200" preserveAspectRatio="none"></svg>
+            </div>
+
+            <div class="uph-legend">
+                <div><span class="uph-dot" style="background: #4DA3FF;"></span> Total purchase amount</div>
+                <div><span class="uph-dot" style="background: #00FFA3;"></span> Total value*</div>
+            </div>
+            
+            <p style="color: #8A93A6; font-size: 0.8rem; margin-top: 1.5rem;">*Prices shown are simulated based on historical market trends. Past performance is no guarantee of future results.</p>
         </div>
 
-    </main>
+        <!-- NARRATIVE SECTION -->
+        <div style="padding: 0 0.5rem; margin-bottom: 4rem;">
+            <h2 class="uph-narrative-title">Your results:</h2>
+            <p class="uph-narrative-text" id="uph-narrative">
+                By buying <span class="uph-highlight">$700</span> worth of ETH monthly from January 2026 to April 2026 your total purchase amount of <span class="uph-highlight">$2,800</span> would now be <span class="uph-highlight" style="color: #EF4444;">$2,577.15</span> (1.21624 ETH).
+            </p>
+
+            <h3 style="color: #fff; font-size: 1rem; margin-bottom: 1rem;">Share results:</h3>
+            <button class="btn-solid-green" style="width: 100%; display: flex; justify-content: center; align-items: center; gap: 0.5rem;" onclick="shareUpholdDCA()">
+                Share Strategy
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
+            </button>
+        </div>
+
 
     <!-- FOOTER -->
     <footer class="site-footer" style="margin-top: 4rem;">

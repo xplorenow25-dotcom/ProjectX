@@ -330,195 +330,183 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // ==========================================
-    // --- 13. DCA CALCULATOR LOGIC & CHART ---
+    // --- 13. NARRATIVE DCA SIMULATOR & CHART ---
     // ==========================================
-    const dcaContainer = document.getElementById('dca-calculator');
-    if (dcaContainer) {
+    const uphContainer = document.getElementById('dca-calculator');
+    if (uphContainer) {
         
-        const inputs =['dca-invest', 'dca-price', 'dca-buys', 'dca-target', 'dca-change', 'dca-fee', 'dca-slip'];
-        const getNum = id => parseFloat(document.getElementById(id).value) || 0;
+        const inputs =['uph-asset', 'uph-amount', 'uph-freq', 'uph-start', 'uph-end'];
         
-        // Slider visual update
-        document.getElementById('dca-buys').addEventListener('input', (e) => {
-            document.getElementById('dca-buys-val').textContent = e.target.value;
-        });
+        function calculateUpholdDCA() {
+            const asset = document.getElementById('uph-asset').value;
+            const amount = parseFloat(document.getElementById('uph-amount').value) || 0;
+            const freq = document.getElementById('uph-freq').value;
+            const startVal = document.getElementById('uph-start').value;
+            const endVal = document.getElementById('uph-end').value;
 
-        // Toggle buttons logic
-        let freq = 'weekly';
-        document.querySelectorAll('.dca-toggle-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                document.querySelectorAll('.dca-toggle-btn').forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
-                freq = e.target.dataset.val;
-                calculateDCA();
-            });
-        });
+            if(!startVal || !endVal || amount <= 0) return;
 
-        // UPGRADED: Number animation function safely handles + and - signs
-        const animatedCache = {};
-        function animateValue(id, end, isCurrency, isCrypto, prefix = '') {
-            const el = document.getElementById(id);
-            if(!el) return;
-            const start = animatedCache[id] || 0;
-            animatedCache[id] = end;
-            const duration = 400;
-            let startTimestamp = null;
-            const step = (timestamp) => {
-                if (!startTimestamp) startTimestamp = timestamp;
-                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                const ease = 1 - Math.pow(1 - progress, 3);
-                const current = start + (end - start) * ease;
-                
-                if(isCurrency) el.textContent = prefix + '$' + current.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                else if (isCrypto) el.textContent = prefix + current.toFixed(6);
-                else el.textContent = prefix + current.toFixed(2) + '%';
-                
-                if (progress < 1) window.requestAnimationFrame(step);
-            };
-            window.requestAnimationFrame(step);
-        }
+            // 1. Calculate number of buys based on dates
+            const d1 = new Date(startVal + "-01");
+            const d2 = new Date(endVal + "-01");
+            let months = (d2.getFullYear() - d1.getFullYear()) * 12 + (d2.getMonth() - d1.getMonth()) + 1;
+            if (months < 1) months = 1;
 
-        function calculateDCA() {
-            const invest = getNum('dca-invest');
-            const startPrice = getNum('dca-price');
-            const buys = getNum('dca-buys');
-            const target = getNum('dca-target');
-            const changePct = getNum('dca-change') / 100;
-            const feePct = getNum('dca-fee') / 100;
-            const slipPct = getNum('dca-slip') / 100;
+            let buys = months;
+            if(freq === 'weekly') buys = months * 4;
+            if(freq === 'daily') buys = months * 30;
 
+            document.getElementById('uph-buy-count').textContent = `(x${buys})`;
+            
+            // Format dates for display (e.g., "April 2026")
+            const monthNames =["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            const startStr = `${monthNames[d1.getMonth()]} ${d1.getFullYear()}`;
+            const endStr = `${monthNames[d2.getMonth()]} ${d2.getFullYear()}`;
+            
+            document.getElementById('uph-display-date').textContent = `${(d2.getMonth()+1).toString().padStart(2, '0')}/${d2.getFullYear()}`;
+
+            // 2. Fetch the REAL live price of the selected asset from your Ticker!
+            let currentPrice = 3000; // Fallback price
+            const priceEl = document.querySelector(`.price-${asset.toLowerCase()}`);
+            if (priceEl && !priceEl.textContent.includes("Loading") && !priceEl.textContent.includes("Unavailable")) {
+                currentPrice = parseFloat(priceEl.textContent.replace(/[^0-9.-]+/g,"")) || 3000;
+            }
+
+            // 3. Simulate historical curve
             let totalInvested = 0;
             let totalCoins = 0;
-            let currentPrice = startPrice;
+            let chartData =[];
             
-            const chartData =[];
-            const tbody = document.getElementById('dca-table-body');
-            tbody.innerHTML = '';
+            // We simulate that the price started 40% lower/higher and trended toward today's real price
+            let simPrice = currentPrice * 0.6; 
+            const priceStep = (currentPrice - simPrice) / buys;
 
             for (let i = 1; i <= buys; i++) {
-                const effectivePrice = currentPrice * (1 + slipPct);
-                const coinsBought = (invest / effectivePrice) * (1 - feePct);
+                totalInvested += amount;
+                totalCoins += (amount / simPrice);
                 
-                totalInvested += invest;
-                totalCoins += coinsBought;
-                const avgPrice = totalInvested / totalCoins;
-
-                chartData.push({ buy: i, marketPrice: currentPrice, avgPrice: avgPrice });
-
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td style="text-align: left;">Buy ${i}</td>
-                    <td>$${currentPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-                    <td>$${invest.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
-                    <td style="color: #00FFA3;">+${coinsBought.toFixed(6)}</td>
-                    <td>${totalCoins.toFixed(6)}</td>
-                `;
-                tbody.appendChild(tr);
-
-                // UPGRADED: Injects realistic market volatility so the chart looks authentic!
-                const volatilityWave = Math.sin(i * 0.8) * 0.08; // +/- 8% swings
-                currentPrice = currentPrice * (1 + changePct + volatilityWave);
+                let currentVal = totalCoins * simPrice;
+                chartData.push({ step: i, invested: totalInvested, value: currentVal });
+                
+                simPrice += priceStep; // Move price closer to today's real price
             }
 
-            const finalAvgPrice = totalInvested / totalCoins;
-            animateValue('res-avg-price', finalAvgPrice, true, false);
-            animateValue('res-invested', totalInvested, true, false);
-            animateValue('res-coins', totalCoins, false, true);
+            // Final actual value based on real-time price today
+            const finalValue = totalCoins * currentPrice;
+            const profit = finalValue - totalInvested;
+            const profitPct = (profit / totalInvested) * 100;
 
-            // UPGRADED: Profit Calculation handles signs perfectly
-            const profEl = document.getElementById('res-profit');
-            const pctEl = document.getElementById('res-profit-pct');
+            // 4. Update the UI
+            const formatCur = num => '$' + num.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
             
-            if (target > 0 && totalCoins > 0) {
-                const portfolioValue = totalCoins * target;
-                const profit = portfolioValue - totalInvested;
-                const profitPct = (profit / totalInvested) * 100;
-                
-                const sign = profit >= 0 ? '+' : '-';
-                const color = profit >= 0 ? '#00FFA3' : '#EF4444';
-
-                profEl.style.color = color; 
-                pctEl.style.color = color;
-                
-                animateValue('res-profit', Math.abs(profit), true, false, sign);
-                animateValue('res-profit-pct', Math.abs(profitPct), false, false, sign);
+            document.getElementById('uph-res-invested').textContent = formatCur(totalInvested);
+            
+            const valEl = document.getElementById('uph-res-value');
+            const pctEl = document.getElementById('uph-res-pct');
+            
+            valEl.textContent = formatCur(finalValue);
+            document.getElementById('uph-res-coins').textContent = `${totalCoins.toFixed(5)} ${asset}`;
+            
+            if (profit >= 0) {
+                valEl.style.color = '#00FFA3';
+                pctEl.style.color = '#00FFA3';
+                pctEl.textContent = `+${profitPct.toFixed(2)}%`;
             } else {
-                profEl.textContent = "$0.00"; pctEl.textContent = "0.00%";
-                profEl.style.color = '#8A93A6'; pctEl.style.color = '#8A93A6';
+                valEl.style.color = '#EF4444';
+                pctEl.style.color = '#EF4444';
+                pctEl.textContent = `${profitPct.toFixed(2)}%`; // Negative sign is built-in
             }
 
-            drawChart(chartData);
+            // 5. Update Narrative Text dynamically!
+            const narrativeColor = profit >= 0 ? '#00FFA3' : '#EF4444';
+            document.getElementById('uph-narrative').innerHTML = `
+                By buying <span class="uph-highlight" style="color: #00FFA3;">$${amount}</span> worth of ${asset} ${freq} from ${startStr} to ${endStr} your total purchase amount of <span class="uph-highlight" style="color: #4DA3FF;">${formatCur(totalInvested)}</span> would now be <span class="uph-highlight" style="color: ${narrativeColor};">${formatCur(finalValue)}</span> (${totalCoins.toFixed(5)} ${asset}).
+            `;
+
+            drawUpholdChart(chartData, profit >= 0);
         }
 
-        // UPGRADED: Chart prevents division-by-zero crashes
-        function drawChart(data) {
-            const svg = document.getElementById('dca-chart');
-            svg.innerHTML = ''; 
+        // 6. Draw the Beautiful Area Chart
+        function drawUpholdChart(data, isProfit) {
+            const svg = document.getElementById('uph-svg');
+            const yAxis = document.getElementById('uph-y-axis');
+            svg.innerHTML = ''; yAxis.innerHTML = '';
             if(data.length < 1) return;
 
             const w = 500; const h = 200;
-            const padX = 10; const padY = 20;
-
-            const allPrices = data.flatMap(d => [d.marketPrice, d.avgPrice]);
-            const minP = Math.min(...allPrices) * 0.95;
-            const maxP = Math.max(...allPrices) * 1.05;
-            const range = (maxP - minP) || 1; // Prevents "NaN" chart crashes
+            const maxVal = Math.max(data[data.length-1].invested, data[data.length-1].value) * 1.1;
             
-            const getX = (index) => padX + (data.length > 1 ? (index / (data.length - 1)) : 0) * (w - padX * 2);
-            const getY = (price) => h - padY - ((price - minP) / range) * (h - padY * 2);
-
-            let marketPts = "", avgPts = "";
-            data.forEach((d, i) => {
-                const x = getX(i);
-                marketPts += `${x},${getY(d.marketPrice)} `;
-                avgPts += `${x},${getY(d.avgPrice)} `;
+            // Draw Y-Axis lines and labels[0, 0.33, 0.66, 1].forEach(tick => {
+                const yPos = h - (tick * h);
+                const tickVal = maxVal * tick;
+                yAxis.innerHTML += `<div class="uph-y-line" style="top: ${yPos}px;"></div>`;
+                yAxis.innerHTML += `<div class="uph-y-label" style="top: ${yPos}px;">$${tickVal.toLocaleString(undefined, {maximumFractionDigits:0})}</div>`;
             });
 
-            const mLine = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
-            mLine.setAttribute("points", marketPts.trim());
-            mLine.setAttribute("class", "chart-line-market");
-            svg.appendChild(mLine);
+            const getX = (index) => (index / (data.length - 1)) * w;
+            const getY = (val) => h - ((val / maxVal) * h);
 
-            const aLine = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
-            aLine.setAttribute("points", avgPts.trim());
-            aLine.setAttribute("class", "chart-line-avg");
-            svg.appendChild(aLine);
+            let investPts = `0,${h} `;
+            let valuePts = `0,${h} `;
+
+            data.forEach((d, i) => {
+                const x = getX(i);
+                investPts += `${x},${getY(d.invested)} `;
+                valuePts += `${x},${getY(d.value)} `;
+            });
+
+            investPts += `${w},${h}`;
+            valuePts += `${w},${h}`;
+
+            // Determine Top Line Color
+            const valueColor = isProfit ? '#00FFA3' : '#EF4444';
+
+            // Invested Area (Blue)
+            const iPoly = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+            iPoly.setAttribute("points", investPts);
+            iPoly.setAttribute("fill", "rgba(77, 163, 255, 0.2)");
+            iPoly.setAttribute("stroke", "#4DA3FF");
+            iPoly.setAttribute("stroke-width", "3");
+            svg.appendChild(iPoly);
+
+            // Value Area (Green/Red)
+            const vPoly = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+            vPoly.setAttribute("points", valuePts);
+            vPoly.setAttribute("fill", "transparent");
+            vPoly.setAttribute("stroke", valueColor);
+            vPoly.setAttribute("stroke-width", "3");
+            svg.appendChild(vPoly);
         }
 
-        inputs.forEach(id => document.getElementById(id).addEventListener('input', calculateDCA));
+        // Listen for changes on all inputs
+        inputs.forEach(id => document.getElementById(id).addEventListener('input', calculateUpholdDCA));
 
-        window.shareDCA = async function() {
+        // URL Sharing Logic
+        window.shareUpholdDCA = async function() {
             let params = new URLSearchParams();
-            inputs.forEach(id => params.append(id.replace('dca-', ''), getNum(id)));
-            params.append('freq', freq);
+            inputs.forEach(id => params.append(id.replace('uph-', ''), document.getElementById(id).value));
             
             let shareUrl = window.location.origin + window.location.pathname + '?' + params.toString();
             if (navigator.share) {
-                try { await navigator.share({ title: 'My DCA Strategy', url: shareUrl }); } catch(err) {}
+                try { await navigator.share({ title: 'My Crypto Strategy', url: shareUrl }); } catch(err) {}
             } else {
                 navigator.clipboard.writeText(shareUrl);
                 alert('Strategy Link Copied!');
             }
         };
 
+        // Load Shared URL Data
         const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('invest')) {
+        if (urlParams.has('amount')) {
             inputs.forEach(id => {
-                const key = id.replace('dca-', '');
+                const key = id.replace('uph-', '');
                 if(urlParams.has(key)) document.getElementById(id).value = urlParams.get(key);
             });
-            const sFreq = urlParams.get('freq');
-            if(sFreq) {
-                document.querySelectorAll('.dca-toggle-btn').forEach(b => {
-                    b.classList.remove('active');
-                    if(b.dataset.val === sFreq) b.classList.add('active');
-                });
-            }
-            document.getElementById('dca-buys-val').textContent = document.getElementById('dca-buys').value;
             window.history.replaceState({}, document.title, window.location.pathname);
         }
 
-        calculateDCA();
+        // Delay initial calculation slightly so the Live Price API has time to load first!
+        setTimeout(calculateUpholdDCA, 1500);
     }
     
 }); // <-- DO NOT DELETE THIS FINAL BRACKET!

@@ -739,84 +739,43 @@ a:hover { color: var(--accent); }
 }
 
 /* ======================================================= */
-/* ======== CRYPTO DCA CALCULATOR PREMIUM UI ======== */
+/* ======== UPHOLD STYLE NARRATIVE DCA CALCULATOR ======== */
 /* ======================================================= */
-.dca-page { background-color: #0B0F1A; }
-.dca-container { max-width: 1000px; padding-bottom: 4rem; }
-.dca-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; align-items: start; }
+.uph-card { background: #181E2A; border-radius: 1.5rem; padding: 1.8rem; margin-bottom: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.02); }
+.uph-label { color: #fff; font-weight: 700; font-size: 1rem; margin-bottom: 0.8rem; display: block; }
+.uph-subtext { color: #8A93A6; font-size: 0.85rem; margin-top: 0.5rem; display: block; }
+.uph-input-box { background: #0B0F1A; border: 1px solid #2A3241; border-radius: 12px; padding: 0.8rem 1rem; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
+.uph-input-box:focus-within { border-color: #00FFA3; }
+.uph-input-box input, .uph-input-box select { background: transparent; border: none; color: #fff; font-size: 1.15rem; font-weight: 600; outline: none; width: 100%; }
+.uph-input-box select option { background: #0B0F1A; }
+.uph-row { display: flex; justify-content: space-between; align-items: center; padding: 1.2rem 0; border-bottom: 1px solid #2A3241; }
+.uph-row:last-child { border-bottom: none; padding-bottom: 0; }
+.uph-row-title { display: flex; align-items: center; gap: 0.8rem; color: #fff; font-weight: 700; }
+.uph-row select { background: transparent; color: #fff; font-size: 1rem; border: none; text-align: right; outline: none; cursor: pointer; }
+.uph-date-picker { background: transparent; color: #fff; border: none; font-size: 1rem; text-align: right; outline: none; font-family: var(--font-base); }
+.uph-date-picker::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
 
-@media (min-width: 768px) {
-    .dca-grid { grid-template-columns: 380px 1fr; }
-}
+/* Card 2 & Chart */
+.uph-title { color: #fff; font-size: 1.4rem; font-weight: 800; margin-bottom: 1.5rem; }
+.uph-date { color: #8A93A6; font-size: 0.95rem; margin-bottom: 1.5rem; }
+.uph-date strong { color: #fff; }
+.uph-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem; }
+.uph-stat-label { color: #E6E8EC; font-size: 1rem; margin-bottom: 0.5rem; }
+.uph-stat-val-blue { color: #4DA3FF; font-size: 1.8rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+.uph-stat-val-green { color: #00FFA3; font-size: 1.8rem; font-weight: 800; font-variant-numeric: tabular-nums; transition: color 0.3s; }
+.uph-stat-sub { color: #E6E8EC; font-size: 0.95rem; font-weight: 600; margin-top: 0.3rem; }
 
-.dca-card { background: #121826; border-radius: 16px; padding: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); }
-.dca-card-header { font-size: 0.8rem; font-weight: 800; color: #8A93A6; letter-spacing: 1.5px; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.8rem; }
+/* The SVG Area Chart */
+.uph-chart-wrapper { position: relative; height: 220px; width: 100%; border-bottom: 1px solid #2A3241; margin-bottom: 1rem; padding-left: 50px; }
+.uph-y-axis { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; }
+.uph-y-line { position: absolute; left: 50px; right: 0; border-top: 1px solid rgba(255,255,255,0.05); }
+.uph-y-label { position: absolute; left: 0; color: #8A93A6; font-size: 0.75rem; transform: translateY(-50%); }
+svg#uph-svg { width: 100%; height: 100%; overflow: visible; display: block; }
 
-.dca-input-block { margin-bottom: 1.2rem; }
-.dca-input-block label { display: block; font-size: 0.9rem; color: #8A93A6; margin-bottom: 0.5rem; font-weight: 600; }
-.dca-input-wrapper { position: relative; display: flex; align-items: center; background: #0B0F1A; border: 1px solid #2A3241; border-radius: 12px; padding: 0.8rem 1rem; transition: 0.3s; }
-.dca-input-wrapper:focus-within { border-color: #00FFA3; box-shadow: 0 0 10px rgba(0, 255, 163, 0.1); }
-.dca-input-wrapper input { flex: 1; background: transparent; border: none; color: #E6E8EC; font-size: 1.05rem; font-weight: 600; outline: none; width: 100%; padding-left: 1.5rem; }
-.dca-prefix { position: absolute; left: 1rem; color: #8A93A6; font-weight: 600; }
-.dca-suffix { position: absolute; right: 1rem; color: #8A93A6; font-size: 0.9rem; }
+.uph-legend { display: flex; justify-content: center; gap: 2rem; margin-top: 1.5rem; color: #E6E8EC; font-size: 0.9rem; }
+.uph-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 0.5rem; }
 
-/* Custom Slider */
-.dca-slider { -webkit-appearance: none; width: 100%; height: 6px; border-radius: 3px; background: #2A3241; outline: none; margin-top: 0.5rem; }
-.dca-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #00FFA3; cursor: pointer; box-shadow: 0 0 10px rgba(0,255,163,0.5); }
-
-/* Toggle Buttons */
-.dca-toggle-group { display: flex; background: #0B0F1A; border-radius: 10px; border: 1px solid #2A3241; overflow: hidden; }
-.dca-toggle-btn { flex: 1; padding: 0.7rem; background: transparent; border: none; color: #8A93A6; font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 0.85rem; }
-.dca-toggle-btn.active { background: rgba(0, 255, 163, 0.1); color: #00FFA3; }
-
-/* Advanced Settings */
-.dca-advanced { margin-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1rem; }
-.dca-advanced summary { color: #8A93A6; font-size: 0.9rem; font-weight: 600; cursor: pointer; outline: none; list-style: none; }
-.dca-advanced summary::-webkit-details-marker { display: none; }
-.dca-advanced-content { margin-top: 1rem; animation: fadeIn 0.3s ease; }
-
-/* Metrics Grid */
-.dca-metrics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
-.dca-metric-card { background: #121826; border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 1.2rem; display: flex; flex-direction: column; justify-content: center; }
-.metric-label { color: #8A93A6; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; }
-.metric-value { color: #E6E8EC; font-size: 1.6rem; font-weight: 800; }
-.metric-sub { font-size: 0.9rem; font-weight: 600; margin-top: 0.2rem; }
-
-/* SVG Chart */
-.dca-chart-container { width: 100%; height: 180px; position: relative; }
-svg#dca-chart { width: 100%; height: 100%; overflow: visible; }
-.chart-line-market { fill: none; stroke: #4DA3FF; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
-.chart-line-avg { fill: none; stroke: #00FFA3; stroke-width: 3; stroke-dasharray: 6 6; stroke-linecap: round; }
-
-/* Data Table */
-.dca-table { width: 100%; border-collapse: collapse; text-align: right; font-size: 0.9rem; }
-.dca-table th { color: #8A93A6; padding: 1rem 0.5rem; font-weight: 600; border-bottom: 1px solid #2A3241; }
-.dca-table td { color: #E6E8EC; padding: 1rem 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.02); font-family: monospace, sans-serif; }
-.dca-table th:first-child, .dca-table td:first-child { text-align: left; }
-
-/* Share Button */
-.dca-share-btn { width: 100%; margin-top: 1.5rem; background: #00FFA3; color: #0B0F1A; border: none; padding: 1rem; border-radius: 12px; font-weight: 800; font-size: 1.05rem; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 0.5rem; transition: 0.2s; }
-.dca-share-btn:hover { filter: brightness(1.1); transform: translateY(-2px); box-shadow: 0 5px 20px rgba(0, 255, 163, 0.3); }
-
-/* ======================================================= */
-/* ======== ANTI-SHAKING & LAYOUT LOCK FIX ======== */
-/* ======================================================= */
-
-/* 1. Locks the table height so the page doesn't jump up and down */
-.table-scroll-box {
-    max-height: 350px;
-    overflow-y: auto;
-    overflow-x: auto;
-    padding-right: 0.5rem;
-}
-
-/* 2. Forces numbers to have identical widths so they don't wiggle when animating! */
-.metric-value, .metric-sub, .dca-table td {
-    font-variant-numeric: tabular-nums;
-}
-
-/* 3. A beautiful custom scrollbar for the new table box */
-.table-scroll-box::-webkit-scrollbar { width: 6px; height: 6px; }
-.table-scroll-box::-webkit-scrollbar-track { background: transparent; }
-.table-scroll-box::-webkit-scrollbar-thumb { background: #2A3241; border-radius: 10px; }
-.table-scroll-box::-webkit-scrollbar-thumb:hover { background: #00FFA3; }
+/* Narrative Text */
+.uph-narrative-title { color: #00FFA3; font-size: 2.2rem; font-weight: 700; margin: 2rem 0 1rem; letter-spacing: -1px; }
+.uph-narrative-text { color: #E6E8EC; font-size: 1.5rem; line-height: 1.6; font-weight: 500; margin-bottom: 2.5rem; }
+.uph-highlight { color: #00FFA3; font-weight: 700; transition: color 0.3s; }
